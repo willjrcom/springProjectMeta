@@ -24,6 +24,7 @@ public class ClientModel {
 
     private String name;
     private String email;
+    private String cpf;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AddressModel> addresses;
@@ -33,7 +34,7 @@ public class ClientModel {
                 .map(AddressModel::toDomain)
                 .toList();
 
-        return new Client(id, name, email, addresses);
+        return new Client(id, name, email, cpf, addresses);
     }
 
     public static ClientModel toModel(Client client) {
@@ -41,6 +42,6 @@ public class ClientModel {
                 .map(AddressModel::toModel)
                 .toList();
 
-        return new ClientModel(client.getId(), client.getName(), client.getEmail(), addresses);
+        return new ClientModel(client.getId(), client.getName(), client.getEmail(), client.getCpf(), addresses);
     }
 }

@@ -21,20 +21,25 @@ public class CreateAddressDTO {
     private String number;
 
     @JsonProperty("neighborhood")
+    @NotNull
     private String neighborhood;
 
     @JsonProperty("city")
+    @NotNull
     private String city;
 
     @JsonProperty("uf")
     @Enumerated(EnumType.STRING)
+    @NotNull
     private String uf;
 
     @JsonProperty("country")
+    @NotNull
     private String country;
 
     @JsonProperty("zip_code")
     @Pattern(regexp = "^[0-9]{5}-[0-9]{3}$")
+    @NotNull
     private String zipCode;
 
     public Address toDomain() {

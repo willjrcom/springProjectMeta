@@ -13,6 +13,7 @@ public class Client {
     private Long id;
     private String name;
     private String email;
+    private String cpf;
     private List<Address> addresses;
 
     public void addAddress(Address address) {

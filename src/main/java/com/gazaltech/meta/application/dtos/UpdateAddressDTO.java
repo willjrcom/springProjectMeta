@@ -35,10 +35,6 @@ public class UpdateAddressDTO {
     private String zipCode;
 
     public void updateDomain(Address address) {
-        if (address == null) {
-            return;
-        }
-
         if (street != null) {
             address.setStreet(street);
         }

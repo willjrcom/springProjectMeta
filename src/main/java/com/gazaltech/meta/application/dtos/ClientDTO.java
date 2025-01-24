@@ -18,14 +18,13 @@ public class ClientDTO {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("cpf")
+    private String cpf;
+
     @JsonProperty("addresses")
     private List<AddressDTO> addresses;
 
     public static ClientDTO fromDomain(Client client) {
-        if (client == null) {
-            return null;
-        }
-
         List<AddressDTO> addressDTOs = client.getAddresses()
                 .stream()
                 .map(AddressDTO::fromDomain)
@@ -35,6 +34,7 @@ public class ClientDTO {
                 client.getId(),
                 client.getName(),
                 client.getEmail(),
+                client.getCpf(),
                 addressDTOs);
 
         return clientDTO;
