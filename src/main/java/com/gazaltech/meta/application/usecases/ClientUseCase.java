@@ -91,23 +91,21 @@ public class ClientUseCase implements ClientPort {
                 .map(AddressModel::toDomain)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
         
-        client.addAddress(address);
+        client.setAddress(address);
         
-        clientRepository.save(ClientModel.toModel(client));
+        var clientModel = ClientModel.toModel(client);
+        clientRepository.save(clientModel);
     }
 
     @Override
-    public void removeAddress(Long id, Long addressID) {
+    public void removeAddress(Long id) {
         var client = clientRepository.findById(id)
                 .map(ClientModel::toDomain)
                 .orElseThrow(() -> new NotFoundException("Client not found"));
 
-        var address = addressRepository.findById(addressID)
-                .map(AddressModel::toDomain)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
+        client.setAddress(null);
 
-        client.removeAddress(address);
-
-        clientRepository.save(ClientModel.toModel(client));
+        var clientModel = ClientModel.toModel(client);
+        clientRepository.save(clientModel);
     }
 }

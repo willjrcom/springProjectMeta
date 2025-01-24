@@ -13,7 +13,7 @@ public interface ClientPort {
 
     void addAddress(Long id, Long addressID);
 
-    void removeAddress(Long id, Long addressID);
+    void removeAddress(Long id);
 
     void deleteClientByID(Long id);
 

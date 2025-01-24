@@ -33,6 +33,9 @@ public class AddressModel {
     }
 
     public static AddressModel toModel(Address address) {
+        if (address == null) {
+            return null;
+        }
         return new AddressModel(address.getId(), address.getStreet(), address.getNumber(), address.getNeighborhood(), address.getCity(), address.getUf().toString(), address.getCountry(), address.getZipCode());
     }
 }

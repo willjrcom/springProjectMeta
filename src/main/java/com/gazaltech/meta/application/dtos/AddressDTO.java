@@ -32,6 +32,10 @@ public class AddressDTO {
     private String zipCode;
 
     public static AddressDTO fromDomain(Address address) {
+        if (address == null) {
+            return null;
+        }
+        
         var addressDTO = new AddressDTO(
             address.getId(),
             address.getStreet(),

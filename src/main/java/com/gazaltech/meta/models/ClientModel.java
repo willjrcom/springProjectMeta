@@ -1,11 +1,5 @@
 package com.gazaltech.meta.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.domain.Client;
 
 import jakarta.persistence.CascadeType;
@@ -14,7 +8,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -33,22 +28,15 @@ public class ClientModel {
     private String email;
     private String cpf;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<AddressModel> addresses = new ArrayList<AddressModel>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = true) 
+    private AddressModel address;
 
     public Client toDomain() {
-        List<Address> addresses = this.addresses.stream()
-                .map(AddressModel::toDomain)
-                .collect(Collectors.toList());
-
-        return new Client(id, name, email, cpf, addresses);
+        return new Client(id, name, email, cpf, address == null ? null : address.toDomain());
     }
 
     public static ClientModel toModel(Client client) {
-        var addresses = Optional.ofNullable(client.getAddresses())
-                .map(list -> list.stream().map(AddressModel::toModel).collect(Collectors.toList()))
-                .orElse(new ArrayList<>());
-
-        return new ClientModel(client.getId(), client.getName(), client.getEmail(), client.getCpf(), addresses);
+        return new ClientModel(client.getId(), client.getName(), client.getEmail(), client.getCpf(), AddressModel.toModel(client.getAddress()));
     }
 }
