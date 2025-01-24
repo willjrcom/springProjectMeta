@@ -14,6 +14,7 @@ import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.application.ports.AddressPort;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepositoryImpl;
+import com.gazaltech.meta.infrastructure.services.viaCep.ViaCepClient;
 import com.gazaltech.meta.models.AddressModel;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
 
@@ -23,9 +24,18 @@ public class AddressUseCase implements AddressPort {
     @Autowired
     private AddressRepositoryImpl addressRepository;
 
+    @Autowired
+    private ViaCepClient viaCepClient;
+
     @Override
     public String createAddress(CreateAddressDTO addressDTO) {
         var address = addressDTO.toDomain();
+
+        var cep = address.getZipCode().replace("-", "");
+        var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
+        System.out.println(viaCepResponse);
+        viaCepResponse.updateDomain(address);
+
         var addressModel = AddressModel.toModel(address);
 
         var result = addressRepository.save(addressModel);
