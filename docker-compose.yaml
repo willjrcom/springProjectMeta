@@ -1,9 +1,18 @@
+version: '3.8'
+
 services:
   postgres:
-    container_name: "postgres"
-    image: postgres:latest
+    container_name: "postgres-meta"
+    image: postgres:15
+    restart: unless-stopped
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=Pass!
+      POSTGRES_DB: meta
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: Pass!
     ports:
       - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
