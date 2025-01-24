@@ -1,11 +1,13 @@
 package com.gazaltech.meta.application.usecases;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.gazaltech.meta.application.dtos.AddressDTO;
 import com.gazaltech.meta.application.dtos.CreateAddressDTO;
@@ -15,6 +17,7 @@ import com.gazaltech.meta.infrastructure.repositories.AddressRepositoryImpl;
 import com.gazaltech.meta.models.AddressModel;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
 
+@Service
 public class AddressUseCase implements AddressPort {
 
     @Autowired
@@ -57,9 +60,9 @@ public class AddressUseCase implements AddressPort {
     @Override
     public AddressDTO getAddressByID(Long id) {
         return addressRepository.findById(id)
-                .map(addressModel -> addressModel.toDomain()) // Converte o AddressModel para Domain
-                .map(address -> AddressDTO.fromDomain(address)) // Converte o Domain para DTO
-                .orElseThrow(() -> new NotFoundException("Address not found")); // Lança exceção se não encontrar
+                .map(addressModel -> addressModel.toDomain())
+                .map(address -> AddressDTO.fromDomain(address))
+                .orElseThrow(() -> new NotFoundException("Address not found"));
     }
 
     @Override
@@ -70,6 +73,6 @@ public class AddressUseCase implements AddressPort {
         return addressModels.stream()
                 .map(AddressModel::toDomain)
                 .map(address -> AddressDTO.fromDomain(address))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package com.gazaltech.meta.application.dtos;
 
+import java.util.ArrayList;
+
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +26,6 @@ public class CreateClientDTO {
     private String cpf;
 
     public Client toDomain() {
-        return new Client(null, name, email, cpf, null);
+        return new Client(null, name, email, cpf, new ArrayList<>());
     }
 }

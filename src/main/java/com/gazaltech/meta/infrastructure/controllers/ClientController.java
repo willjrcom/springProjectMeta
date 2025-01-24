@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,7 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClientDTO>> getAllClients(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<ClientDTO>> getAllClients(@RequestParam @DefaultValue("0") int page, @RequestParam @DefaultValue("10") int size) {
         logger.info("Clients found");
 
         var clients = clientUseCase.getAllClients(page, size);
@@ -57,7 +58,7 @@ public class ClientController {
     }
 
     @PostMapping("/{id}/addresses/{addressId}")
-    public ResponseEntity<String> addAddress(@PathVariable Long id, @RequestBody @Valid Long addressId) {
+    public ResponseEntity<String> addAddress(@PathVariable Long id, @PathVariable @Valid Long addressId) {
         logger.info("Address added: {}", addressId);
 
         clientUseCase.addAddress(id, addressId);

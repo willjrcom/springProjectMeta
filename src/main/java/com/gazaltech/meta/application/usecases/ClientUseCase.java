@@ -1,11 +1,13 @@
 package com.gazaltech.meta.application.usecases;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.gazaltech.meta.application.dtos.ClientDTO;
 import com.gazaltech.meta.application.dtos.CreateClientDTO;
@@ -17,6 +19,7 @@ import com.gazaltech.meta.models.AddressModel;
 import com.gazaltech.meta.models.ClientModel;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
 
+@Service
 public class ClientUseCase implements ClientPort {
 
     @Autowired
@@ -75,7 +78,7 @@ public class ClientUseCase implements ClientPort {
         return clientModels.stream()
                 .map(ClientModel::toDomain)
                 .map(client -> ClientDTO.fromDomain(client))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -89,7 +92,7 @@ public class ClientUseCase implements ClientPort {
                 .orElseThrow(() -> new NotFoundException("Address not found"));
         
         client.addAddress(address);
-
+        
         clientRepository.save(ClientModel.toModel(client));
     }
 

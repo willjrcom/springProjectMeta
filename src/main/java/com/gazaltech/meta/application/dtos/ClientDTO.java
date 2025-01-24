@@ -1,6 +1,9 @@
 package com.gazaltech.meta.application.dtos;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gazaltech.meta.domain.Client;
@@ -25,10 +28,11 @@ public class ClientDTO {
     private List<AddressDTO> addresses;
 
     public static ClientDTO fromDomain(Client client) {
-        List<AddressDTO> addressDTOs = client.getAddresses()
+        List<AddressDTO> addressDTOs = Optional.ofNullable(client.getAddresses())
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(AddressDTO::fromDomain)
-                .toList();
+                .collect(Collectors.toList());
 
         var clientDTO = new ClientDTO(
                 client.getId(),
