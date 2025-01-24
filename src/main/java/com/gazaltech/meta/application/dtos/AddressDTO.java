@@ -25,9 +25,6 @@ public class AddressDTO {
     @JsonProperty("uf")
     private String uf;
 
-    @JsonProperty("country")
-    private String country;
-
     @JsonProperty("zip_code")
     private String zipCode;
 
@@ -43,7 +40,6 @@ public class AddressDTO {
             address.getNeighborhood(),
             address.getCity(),
             address.getUf().toString(),
-            address.getCountry(),
             address.getZipCode()
         );
 

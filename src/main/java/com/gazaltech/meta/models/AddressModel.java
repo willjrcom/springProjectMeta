@@ -25,17 +25,16 @@ public class AddressModel {
     private String neighborhood;
     private String city;
     private String uf;
-    private String country;
     private String zipCode;
 
     public Address toDomain() {
-        return new Address(id, street, number, neighborhood, city, Uf.valueOf(uf), country, zipCode);
+        return new Address(id, street, number, neighborhood, city, Uf.valueOf(uf), zipCode);
     }
 
     public static AddressModel toModel(Address address) {
         if (address == null) {
             return null;
         }
-        return new AddressModel(address.getId(), address.getStreet(), address.getNumber(), address.getNeighborhood(), address.getCity(), address.getUf().toString(), address.getCountry(), address.getZipCode());
+        return new AddressModel(address.getId(), address.getStreet(), address.getNumber(), address.getNeighborhood(), address.getCity(), address.getUf().toString(), address.getZipCode());
     }
 }

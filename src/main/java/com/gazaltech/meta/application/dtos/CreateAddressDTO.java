@@ -33,16 +33,12 @@ public class CreateAddressDTO {
     @NotNull
     private String uf;
 
-    @JsonProperty("country")
-    @NotNull
-    private String country;
-
     @JsonProperty("zip_code")
     @Pattern(regexp = "^[0-9]{5}-[0-9]{3}$")
     @NotNull
     private String zipCode;
 
     public Address toDomain() {
-        return new Address(null, street, number, neighborhood, city, Uf.valueOf(uf), country, zipCode);
+        return new Address(null, street, number, neighborhood, city, Uf.valueOf(uf), zipCode);
     }
 }

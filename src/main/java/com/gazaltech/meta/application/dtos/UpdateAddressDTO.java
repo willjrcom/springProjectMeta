@@ -27,9 +27,6 @@ public class UpdateAddressDTO {
     @JsonProperty("uf")
     private String uf;
 
-    @JsonProperty("country")
-    private String country;
-
     @JsonProperty("zip_code")
     @Pattern(regexp = "^[0-9]{5}-[0-9]{3}$")
     private String zipCode;
@@ -53,10 +50,6 @@ public class UpdateAddressDTO {
 
         if (uf != null) {
             address.setUf(Uf.valueOf(uf));
-        }
-
-        if (country != null) {
-            address.setCountry(country);
         }
 
         if (zipCode != null) {
