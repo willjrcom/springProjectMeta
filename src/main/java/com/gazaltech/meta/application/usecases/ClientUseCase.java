@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import com.gazaltech.meta.application.dtos.ClientDTO;
 import com.gazaltech.meta.application.dtos.CreateClientDTO;
 import com.gazaltech.meta.application.dtos.UpdateClientDTO;
-import com.gazaltech.meta.application.ports.ClientPort;
+import com.gazaltech.meta.application.mappers.ClientMapper;
+import com.gazaltech.meta.application.ports.client.ClientPort;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepositoryImpl;
 import com.gazaltech.meta.infrastructure.repositories.ClientRepositoryImpl;
 import com.gazaltech.meta.models.AddressModel;
@@ -29,9 +30,11 @@ public class ClientUseCase implements ClientPort {
     @Autowired
     private AddressRepositoryImpl addressRepository;
 
+    private final ClientMapper clientMapper = ClientMapper.INSTANCE;
+
     @Override
     public String createClient(CreateClientDTO clientDTO) {
-        var client = clientDTO.toDomain();
+        var client = clientMapper.createDtoToDomain(clientDTO);
         var clientModel = ClientModel.toModel(client);
 
         var result = clientRepository.save(clientModel);
@@ -43,7 +46,7 @@ public class ClientUseCase implements ClientPort {
         clientRepository.findById(id)
                 .map(ClientModel::toDomain)
                 .map(client -> {
-                    clientDTO.updateDomain(client);
+                    clientMapper.updateDomainFromDto(clientDTO, client);
                     return client;
                 })
                 .map(ClientModel::toModel)
@@ -55,19 +58,18 @@ public class ClientUseCase implements ClientPort {
 
     @Override
     public void deleteClientByID(Long id) {
-        clientRepository.findById(id)
-                .ifPresentOrElse(
-                        client -> clientRepository.deleteById(id),
-                        () -> {
-                            throw new NotFoundException("Client not found");
-                        });
+        if (!clientRepository.existsById(id)) {
+            throw new NotFoundException("Client not found with id: " + id);
+        }
+        
+        clientRepository.deleteById(id);
     }
 
     @Override
     public ClientDTO getClientByID(Long id) {
         return clientRepository.findById(id)
                 .map(clientModel -> clientModel.toDomain())
-                .map(client -> ClientDTO.fromDomain(client))
+                .map(client -> clientMapper.domainToDto(client))
                 .orElseThrow(() -> new NotFoundException("Client not found"));
     }
 
@@ -78,7 +80,7 @@ public class ClientUseCase implements ClientPort {
 
         return clientModels.stream()
                 .map(ClientModel::toDomain)
-                .map(client -> ClientDTO.fromDomain(client))
+                .map(client -> clientMapper.domainToDto(client))
                 .collect(Collectors.toList());
     }
 

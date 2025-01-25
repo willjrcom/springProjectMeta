@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import com.gazaltech.meta.application.dtos.AddressDTO;
 import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
-import com.gazaltech.meta.application.ports.AddressPort;
+import com.gazaltech.meta.application.mappers.AddressMapper;
+import com.gazaltech.meta.application.ports.address.AddressPort;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepositoryImpl;
 import com.gazaltech.meta.infrastructure.services.viaCep.ViaCepClient;
 import com.gazaltech.meta.models.AddressModel;
@@ -27,13 +28,14 @@ public class AddressUseCase implements AddressPort {
     @Autowired
     private ViaCepClient viaCepClient;
 
+    private final AddressMapper adressMapper = AddressMapper.INSTANCE;
+
     @Override
     public String createAddress(CreateAddressDTO addressDTO) {
-        var address = addressDTO.toDomain();
+        var address = adressMapper.createDtoToDomain(addressDTO);
 
         var cep = address.getZipCode().replace("-", "");
         var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
-        System.out.println(viaCepResponse);
         viaCepResponse.updateDomain(address);
 
         var addressModel = AddressModel.toModel(address);
@@ -48,6 +50,11 @@ public class AddressUseCase implements AddressPort {
                 .map(AddressModel::toDomain)
                 .map(address -> {
                     addressDTO.updateDomain(address);
+
+                    var cep = address.getZipCode().replace("-", "");
+                    var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
+                    viaCepResponse.updateDomain(address);
+
                     return address;
                 })
                 .map(AddressModel::toModel)
@@ -59,19 +66,18 @@ public class AddressUseCase implements AddressPort {
 
     @Override
     public void deleteAddressByID(Long id) {
-        addressRepository.findById(id)
-                .ifPresentOrElse(
-                        address -> addressRepository.deleteById(id),
-                        () -> {
-                            throw new NotFoundException("Address not found");
-                        });
+        if(!addressRepository.existsById(id)) {
+            throw new NotFoundException("Address not found with id: " + id);
+        }
+        
+        addressRepository.deleteById(id);
     }
 
     @Override
     public AddressDTO getAddressByID(Long id) {
         return addressRepository.findById(id)
                 .map(addressModel -> addressModel.toDomain())
-                .map(address -> AddressDTO.fromDomain(address))
+                .map(address -> adressMapper.domainToDto(address))
                 .orElseThrow(() -> new NotFoundException("Address not found"));
     }
 
@@ -82,7 +88,7 @@ public class AddressUseCase implements AddressPort {
 
         return addressModels.stream()
                 .map(AddressModel::toDomain)
-                .map(address -> AddressDTO.fromDomain(address))
+                .map(address -> adressMapper.domainToDto(address))
                 .collect(Collectors.toList());
     }
 }
