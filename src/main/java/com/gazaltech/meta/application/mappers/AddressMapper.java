@@ -2,26 +2,20 @@ package com.gazaltech.meta.application.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.MappingTarget;
 
 import com.gazaltech.meta.application.dtos.AddressDTO;
 import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.domain.Address;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AddressMapper {
-    AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
-
-    @Mapping(source = "id", target = "id")
     AddressDTO domainToDto(Address address);
 
-    @Mapping(source = "id", target = "id")
-    Address dtoToDomain(AddressDTO dto);
-
-    @Mapping(source = "id", target = "id")
+    @Mapping(target = "id", ignore = true)
     Address createDtoToDomain(CreateAddressDTO client);
 
-    @Mapping(source = "id", target = "id")
-    Address updateDtoToDomain(UpdateAddressDTO client);
+    @Mapping(target = "id", ignore = true)
+    void updateDomainFromDto(UpdateAddressDTO dto, @MappingTarget Address client);
 }

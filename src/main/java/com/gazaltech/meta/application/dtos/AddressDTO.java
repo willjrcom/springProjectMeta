@@ -1,11 +1,10 @@
 package com.gazaltech.meta.application.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gazaltech.meta.domain.Address;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@AllArgsConstructor
+@Data
 public class AddressDTO {
     @JsonProperty("id")
     private Long id;
@@ -27,22 +26,4 @@ public class AddressDTO {
 
     @JsonProperty("zip_code")
     private String zipCode;
-
-    public static AddressDTO fromDomain(Address address) {
-        if (address == null) {
-            return null;
-        }
-        
-        var addressDTO = new AddressDTO(
-            address.getId(),
-            address.getStreet(),
-            address.getNumber(),
-            address.getNeighborhood(),
-            address.getCity(),
-            address.getUf().toString(),
-            address.getZipCode()
-        );
-
-        return addressDTO;
-    }
 }

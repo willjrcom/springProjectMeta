@@ -1,11 +1,10 @@
 package com.gazaltech.meta.application.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gazaltech.meta.domain.Client;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@AllArgsConstructor
+@Data
 public class ClientDTO {
     @JsonProperty("id")
     private Long id;
@@ -21,19 +20,4 @@ public class ClientDTO {
 
     @JsonProperty("address")
     private AddressDTO address;
-
-    public static ClientDTO fromDomain(Client client) {
-        if (client == null) {
-            return null;
-        }
-        
-        var clientDTO = new ClientDTO(
-                client.getId(),
-                client.getName(),
-                client.getEmail(),
-                client.getCpf(),
-                AddressDTO.fromDomain(client.getAddress()));
-
-        return clientDTO;
-    }
 }

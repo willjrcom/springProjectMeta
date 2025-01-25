@@ -1,15 +1,15 @@
 package com.gazaltech.meta.application.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gazaltech.meta.domain.Address;
-import com.gazaltech.meta.domain.Uf;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
+@Data
 public class CreateAddressDTO {
 
     @JsonProperty("street")
@@ -37,8 +37,4 @@ public class CreateAddressDTO {
     @Pattern(regexp = "^[0-9]{5}-[0-9]{3}$")
     @NotNull
     private String zipCode;
-
-    public Address toDomain() {
-        return new Address(null, street, number, neighborhood, city, Uf.valueOf(uf), zipCode);
-    }
 }

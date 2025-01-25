@@ -3,8 +3,10 @@ package com.gazaltech.meta.application.dtos;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gazaltech.meta.domain.Client;
 
+import lombok.Data;
+
+@Data
 public class UpdateClientDTO {
     
     @JsonProperty("name")
@@ -16,18 +18,4 @@ public class UpdateClientDTO {
     @JsonProperty("cpf")
     @CPF
     private String cpf;
-
-    public void updateDomain(Client client) {
-        if (name != null) {
-            client.setName(name);
-        }
-
-        if (email != null) {
-            client.setEmail(email);
-        }
-
-        if (cpf != null) {
-            client.setCpf(cpf);
-        }
-    }
 }

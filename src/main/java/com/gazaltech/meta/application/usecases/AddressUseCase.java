@@ -28,11 +28,12 @@ public class AddressUseCase implements AddressPort {
     @Autowired
     private ViaCepClient viaCepClient;
 
-    private final AddressMapper adressMapper = AddressMapper.INSTANCE;
+    @Autowired
+    private AddressMapper addressMapper;
 
     @Override
     public String createAddress(CreateAddressDTO addressDTO) {
-        var address = adressMapper.createDtoToDomain(addressDTO);
+        var address = addressMapper.createDtoToDomain(addressDTO);
 
         var cep = address.getZipCode().replace("-", "");
         var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
@@ -49,7 +50,7 @@ public class AddressUseCase implements AddressPort {
         addressRepository.findById(id)
                 .map(AddressModel::toDomain)
                 .map(address -> {
-                    addressDTO.updateDomain(address);
+                    addressMapper.updateDomainFromDto(addressDTO, address);
 
                     var cep = address.getZipCode().replace("-", "");
                     var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
@@ -77,7 +78,7 @@ public class AddressUseCase implements AddressPort {
     public AddressDTO getAddressByID(Long id) {
         return addressRepository.findById(id)
                 .map(addressModel -> addressModel.toDomain())
-                .map(address -> adressMapper.domainToDto(address))
+                .map(address -> addressMapper.domainToDto(address))
                 .orElseThrow(() -> new NotFoundException("Address not found"));
     }
 
@@ -88,7 +89,7 @@ public class AddressUseCase implements AddressPort {
 
         return addressModels.stream()
                 .map(AddressModel::toDomain)
-                .map(address -> adressMapper.domainToDto(address))
+                .map(address -> addressMapper.domainToDto(address))
                 .collect(Collectors.toList());
     }
 }

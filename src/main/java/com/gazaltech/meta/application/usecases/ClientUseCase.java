@@ -30,7 +30,8 @@ public class ClientUseCase implements ClientPort {
     @Autowired
     private AddressRepositoryImpl addressRepository;
 
-    private final ClientMapper clientMapper = ClientMapper.INSTANCE;
+    @Autowired
+    private ClientMapper clientMapper;
 
     @Override
     public String createClient(CreateClientDTO clientDTO) {
