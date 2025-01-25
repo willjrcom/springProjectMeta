@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gazaltech.meta.application.dtos.AddressDTO;
 import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
-import com.gazaltech.meta.application.usecases.AddressUseCase;
+import com.gazaltech.meta.application.ports.address.AddressPort;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -27,7 +28,7 @@ import jakarta.validation.Valid;
 public class AddressController {
 
     @Autowired
-    private AddressUseCase addressUseCase;
+    private AddressPort addressUseCase;
 
     private static final Logger logger = LoggerFactory.getLogger(AddressController.class);
 

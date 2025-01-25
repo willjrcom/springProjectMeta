@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gazaltech.meta.application.dtos.ClientDTO;
 import com.gazaltech.meta.application.dtos.CreateClientDTO;
 import com.gazaltech.meta.application.dtos.UpdateClientDTO;
-import com.gazaltech.meta.application.usecases.ClientUseCase;
+import com.gazaltech.meta.application.ports.client.ClientPort;
 
 import jakarta.validation.Valid;
 
@@ -29,7 +29,7 @@ import jakarta.validation.Valid;
 public class ClientController {
 
     @Autowired
-    private ClientUseCase clientUseCase;
+    private ClientPort clientUseCase;
 
     private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
