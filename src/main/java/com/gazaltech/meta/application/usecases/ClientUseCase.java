@@ -17,6 +17,7 @@ import com.gazaltech.meta.infrastructure.repositories.AddressRepositoryImpl;
 import com.gazaltech.meta.infrastructure.repositories.ClientRepositoryImpl;
 import com.gazaltech.meta.models.AddressModel;
 import com.gazaltech.meta.models.ClientModel;
+import com.gazaltech.meta.shared.exceptions.BadRequestException;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
 
 @Service
@@ -87,6 +88,10 @@ public class ClientUseCase implements ClientPort {
                 .map(ClientModel::toDomain)
                 .orElseThrow(() -> new NotFoundException("Client not found"));
 
+        if (client.getAddress() != null) {
+            throw new BadRequestException("Client already has an address");
+        }
+        
         var address = addressRepository.findById(addressID)
                 .map(AddressModel::toDomain)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
