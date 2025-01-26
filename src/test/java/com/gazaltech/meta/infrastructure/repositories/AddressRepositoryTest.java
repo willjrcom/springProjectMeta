@@ -35,4 +35,33 @@ public class AddressRepositoryTest {
         assertThat(result.getUf()).isEqualTo(addressModel.getUf());
         assertThat(result.getZipCode()).isEqualTo(addressModel.getZipCode());
     }
+
+    @Test
+    public void testFindById() {
+        addressRepository.save(addressModel);
+        AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(addressModel.getId());
+        assertThat(result.getStreet()).isEqualTo(addressModel.getStreet());
+    }
+
+    @Test
+    public void testDelete() {
+        addressRepository.save(addressModel);
+        addressRepository.deleteById(addressModel.getId());
+        AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void testUpdate() {
+        addressModel.setNumber("228");
+        addressRepository.save(addressModel);
+
+        AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(addressModel.getId());
+        assertThat(result.getStreet()).isEqualTo(addressModel.getStreet());
+        assertThat(result.getNumber()).isEqualTo(addressModel.getNumber());
+    }
 }
