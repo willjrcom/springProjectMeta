@@ -14,22 +14,25 @@ import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.application.mappers.AddressMapper;
 import com.gazaltech.meta.application.ports.address.AddressPort;
-import com.gazaltech.meta.infrastructure.repositories.AddressRepositoryImpl;
+import com.gazaltech.meta.infrastructure.mappers.AddressModelMapper;
+import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
 import com.gazaltech.meta.infrastructure.services.viaCep.ViaCepClient;
-import com.gazaltech.meta.models.AddressModel;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
 
 @Service
 public class AddressUseCase implements AddressPort {
 
     @Autowired
-    private AddressRepositoryImpl addressRepository;
+    private AddressRepository addressRepository;
 
     @Autowired
     private ViaCepClient viaCepClient;
 
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private AddressModelMapper addressModelMapper;
 
     @Override
     public String createAddress(CreateAddressDTO addressDTO) {
@@ -39,26 +42,26 @@ public class AddressUseCase implements AddressPort {
         var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
         viaCepResponse.updateDomain(address);
 
-        var addressModel = AddressModel.toModel(address);
+        var addressModel = addressModelMapper.domainToModel(address);
 
         var result = addressRepository.save(addressModel);
-        return result.toDomain().getId().toString();
+        var addressCreated = addressModelMapper.modelToDomain(result);
+        return addressCreated.getId().toString();
     }
 
     @Override
     public void updateAddress(Long id, UpdateAddressDTO addressDTO) {
         addressRepository.findById(id)
-                .map(AddressModel::toDomain)
+                .map(addressModel -> addressModelMapper.modelToDomain(addressModel))
                 .map(address -> {
                     addressMapper.updateDomainFromDto(addressDTO, address);
 
                     var cep = address.getZipCode().replace("-", "");
                     var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
-                    viaCepResponse.updateDomain(address);
 
+                    viaCepResponse.updateDomain(address);
                     return address;
-                })
-                .map(AddressModel::toModel)
+                }).map(address -> addressModelMapper.domainToModel(address))
                 .map(addressModel -> {
                     return addressRepository.save(addressModel);
                 })
@@ -67,17 +70,17 @@ public class AddressUseCase implements AddressPort {
 
     @Override
     public void deleteAddressByID(Long id) {
-        if(!addressRepository.existsById(id)) {
+        if (!addressRepository.existsById(id)) {
             throw new NotFoundException("Address not found with id: " + id);
         }
-        
+
         addressRepository.deleteById(id);
     }
 
     @Override
     public AddressDTO getAddressByID(Long id) {
         return addressRepository.findById(id)
-                .map(addressModel -> addressModel.toDomain())
+                .map(addressModel -> addressModelMapper.modelToDomain(addressModel))
                 .map(address -> addressMapper.domainToDto(address))
                 .orElseThrow(() -> new NotFoundException("Address not found"));
     }
@@ -88,7 +91,7 @@ public class AddressUseCase implements AddressPort {
         var addressModels = addressRepository.findAll(pageable);
 
         return addressModels.stream()
-                .map(AddressModel::toDomain)
+                .map(addressModel -> addressModelMapper.modelToDomain(addressModel))
                 .map(address -> addressMapper.domainToDto(address))
                 .collect(Collectors.toList());
     }
