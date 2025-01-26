@@ -16,7 +16,7 @@ public class AddressRepositoryTest {
 
     private final AddressModel addressModel = AddressModel.builder()
     .street("Rua Piedade")
-    .number("226")
+    .number(226)
     .neighborhood("Piedade")
     .city("Rio de Janeiro")
     .uf("RJ")
@@ -24,7 +24,7 @@ public class AddressRepositoryTest {
     .build();
 
     @Test
-    public void testSave() {
+    public void testSave_AllFields_Success() {
         AddressModel result = addressRepository.save(addressModel);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNotNull();
@@ -37,7 +37,7 @@ public class AddressRepositoryTest {
     }
 
     @Test
-    public void testFindById() {
+    public void testFindById_ValidID_Success() {
         addressRepository.save(addressModel);
         AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
         assertThat(result).isNotNull();
@@ -46,7 +46,13 @@ public class AddressRepositoryTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testFindById_InvalidID_Error() {
+        AddressModel result = addressRepository.findById(999L).orElse(null);
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void testDelete_ValidID_Success() {
         addressRepository.save(addressModel);
         addressRepository.deleteById(addressModel.getId());
         AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
@@ -54,8 +60,15 @@ public class AddressRepositoryTest {
     }
 
     @Test
+    public void testDelete_InvalidID_Error() {
+        addressRepository.deleteById(999L);
+        AddressModel result = addressRepository.findById(999L).orElse(null);
+        assertThat(result).isNull();
+    }
+
+    @Test
     public void testUpdate() {
-        addressModel.setNumber("228");
+        addressModel.setNumber(228);
         addressRepository.save(addressModel);
 
         AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
