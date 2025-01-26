@@ -1,6 +1,4 @@
-package com.gazaltech.meta.models;
-
-import com.gazaltech.meta.domain.Client;
+package com.gazaltech.meta.infrastructure.models;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -12,12 +10,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "clients")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@Data
 public class ClientModel {
 
     @Id
@@ -31,12 +33,4 @@ public class ClientModel {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = true) 
     private AddressModel address;
-
-    public Client toDomain() {
-        return new Client(id, name, email, cpf, address == null ? null : address.toDomain());
-    }
-
-    public static ClientModel toModel(Client client) {
-        return new ClientModel(client.getId(), client.getName(), client.getEmail(), client.getCpf(), AddressModel.toModel(client.getAddress()));
-    }
 }
