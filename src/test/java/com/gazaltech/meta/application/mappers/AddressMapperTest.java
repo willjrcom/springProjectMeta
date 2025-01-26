@@ -58,15 +58,15 @@ public class AddressMapperTest {
 
     @Test
     void testCreateDtoToDomain() {
-        var address = addressMapper.createDtoToDomain(createAddressDTO);
+        var domain = addressMapper.createDtoToDomain(createAddressDTO);
 
-        assertThat(address.getId()).isNull();
-        assertEquals(address.getStreet(), createAddressDTO.getStreet());
-        assertEquals(address.getNumber(), createAddressDTO.getNumber());
-        assertEquals(address.getNeighborhood(), createAddressDTO.getNeighborhood());
-        assertEquals(address.getCity(), createAddressDTO.getCity());
-        assertEquals(address.getUf().toString(), createAddressDTO.getUf());
-        assertEquals(address.getZipCode(), createAddressDTO.getZipCode());
+        assertThat(domain.getId()).isNull();
+        assertEquals(domain.getStreet(), createAddressDTO.getStreet());
+        assertEquals(domain.getNumber(), createAddressDTO.getNumber());
+        assertEquals(domain.getNeighborhood(), createAddressDTO.getNeighborhood());
+        assertEquals(domain.getCity(), createAddressDTO.getCity());
+        assertEquals(domain.getUf().toString(), createAddressDTO.getUf());
+        assertEquals(domain.getZipCode(), createAddressDTO.getZipCode());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class AddressMapperTest {
     void testDomainToModel() {
         var model = addressMapper.domainToModel(address);
 
-        assertThat(model.getId()).isNull();
+        assertEquals(model.getId(), address.getId());
         assertEquals(model.getStreet(), address.getStreet());
         assertEquals(model.getNumber(), address.getNumber());
         assertEquals(model.getNeighborhood(), address.getNeighborhood());
@@ -97,15 +97,15 @@ public class AddressMapperTest {
 
     @Test
     void testModelToDomain() {
-        var address = addressMapper.modelToDomain(addressModel);
+        var domain = addressMapper.modelToDomain(addressModel);
 
-        assertThat(address.getId()).isNull();
-        assertEquals(address.getStreet(), addressModel.getStreet());
-        assertEquals(address.getNumber(), addressModel.getNumber());
-        assertEquals(address.getNeighborhood(), addressModel.getNeighborhood());
-        assertEquals(address.getCity(), addressModel.getCity());
-        assertEquals(address.getUf().toString(), addressModel.getUf());
-        assertEquals(address.getZipCode(), addressModel.getZipCode());
+        assertEquals(domain.getId(), addressModel.getId());
+        assertEquals(domain.getStreet(), addressModel.getStreet());
+        assertEquals(domain.getNumber(), addressModel.getNumber());
+        assertEquals(domain.getNeighborhood(), addressModel.getNeighborhood());
+        assertEquals(domain.getCity(), addressModel.getCity());
+        assertEquals(domain.getUf().toString(), addressModel.getUf());
+        assertEquals(domain.getZipCode(), addressModel.getZipCode());
     }
 
     @Test
