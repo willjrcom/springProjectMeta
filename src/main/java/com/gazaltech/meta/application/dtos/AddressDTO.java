@@ -2,9 +2,11 @@ package com.gazaltech.meta.application.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class AddressDTO {
     @JsonProperty("id")
     private Long id;
