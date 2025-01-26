@@ -13,7 +13,13 @@ public class UpdateAddressDTO {
 
     @JsonProperty("number")
     @Min(1)
-    private String number;
+    private Integer number;
+
+    @JsonProperty("complement")
+    private String complement;
+
+    @JsonProperty("reference")
+    private String reference;
 
     @JsonProperty("neighborhood")
     private String neighborhood;
