@@ -6,8 +6,10 @@ import org.mapstruct.Mapper;
 
 import com.gazaltech.meta.application.dtos.ClientDTO;
 import com.gazaltech.meta.domain.Client;
+import com.gazaltech.meta.infrastructure.models.ClientModel;
 
 @Mapper(componentModel = "spring", uses = { ClientMapper.class })
 public interface ClientListMapper {
-    List<ClientDTO> domainsToDtos(List<Client> dClientDTOtos);
+    List<Client> modelsToDomains(List<ClientModel> models);
+    List<ClientDTO> domainsToDtos(List<Client> domains);
 }

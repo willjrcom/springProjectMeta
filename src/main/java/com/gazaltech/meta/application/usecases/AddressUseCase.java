@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.gazaltech.meta.application.dtos.AddressDTO;
 import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
+import com.gazaltech.meta.application.mappers.AddressListMapper;
 import com.gazaltech.meta.application.mappers.AddressMapper;
 import com.gazaltech.meta.application.ports.address.AddressPort;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
@@ -29,6 +30,9 @@ public class AddressUseCase implements AddressPort {
 
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private AddressListMapper addressListMapper;
 
     @Override
     public String createAddress(CreateAddressDTO addressDTO) {
@@ -84,11 +88,9 @@ public class AddressUseCase implements AddressPort {
     @Override
     public List<AddressDTO> getAllAddresses(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        var addressModels = addressRepository.findAll(pageable);
+        var addressModels = addressRepository.findAll(pageable).stream().collect(Collectors.toList());
 
-        return addressModels.stream()
-                .map(addressModel -> addressMapper.modelToDomain(addressModel))
-                .map(address -> addressMapper.domainToDto(address))
-                .collect(Collectors.toList());
+        var addresses = addressListMapper.modelsToDomains(addressModels);
+        return addressListMapper.domainsToDtos(addresses);
     }
 }

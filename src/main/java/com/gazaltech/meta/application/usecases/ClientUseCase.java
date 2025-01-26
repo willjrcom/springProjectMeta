@@ -13,6 +13,7 @@ import com.gazaltech.meta.application.dtos.ClientDTO;
 import com.gazaltech.meta.application.dtos.CreateClientDTO;
 import com.gazaltech.meta.application.dtos.UpdateClientDTO;
 import com.gazaltech.meta.application.mappers.AddressMapper;
+import com.gazaltech.meta.application.mappers.ClientListMapper;
 import com.gazaltech.meta.application.mappers.ClientMapper;
 import com.gazaltech.meta.application.ports.client.ClientPort;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
@@ -31,6 +32,9 @@ public class ClientUseCase implements ClientPort {
 
     @Autowired
     private ClientMapper clientMapper;
+
+    @Autowired
+    private ClientListMapper clientListMapper;
 
     @Autowired
     private AddressMapper addressMapper;
@@ -80,12 +84,9 @@ public class ClientUseCase implements ClientPort {
     @Override
     public List<ClientDTO> getAllClients(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        var clientModels = clientRepository.findAll(pageable);
-
-        return clientModels.stream()
-                .map(clientModel -> clientMapper.modelToDomain(clientModel))
-                .map(client -> clientMapper.domainToDto(client))
-                .collect(Collectors.toList());
+        var clientModels = clientRepository.findAll(pageable).stream().collect(Collectors.toList());
+        var clients = clientListMapper.modelsToDomains(clientModels);
+        return clientListMapper.domainsToDtos(clients);
     }
 
     @Override
