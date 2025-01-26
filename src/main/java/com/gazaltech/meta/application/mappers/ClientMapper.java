@@ -8,9 +8,11 @@ import com.gazaltech.meta.application.dtos.ClientDTO;
 import com.gazaltech.meta.application.dtos.CreateClientDTO;
 import com.gazaltech.meta.application.dtos.UpdateClientDTO;
 import com.gazaltech.meta.domain.Client;
+import com.gazaltech.meta.infrastructure.models.ClientModel;
 
 @Mapper(componentModel = "spring")
 public interface ClientMapper {
+    // Dto mapper
     ClientDTO domainToDto(Client client);
     
     @Mapping(target = "id", ignore = true) 
@@ -19,4 +21,9 @@ public interface ClientMapper {
 
     @Mapping(target = "id", ignore = true) 
     void updateDomainFromDto(UpdateClientDTO dto, @MappingTarget Client client);
+
+    // Model mapper
+    ClientModel domainToModel(Client client);
+
+    Client modelToDomain(ClientModel client);
 }
