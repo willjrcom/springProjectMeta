@@ -44,8 +44,8 @@ public class ClientUseCase implements ClientPort {
         var client = clientMapper.createDtoToDomain(clientDTO);
         var clientModel = clientModelMapper.domainToModel(client);
 
-        var result = clientRepository.save(clientModel);
-        var clientCreated = clientModelMapper.modelToDomain(result);
+        clientRepository.save(clientModel);
+        var clientCreated = clientModelMapper.modelToDomain(clientModel);
         return clientCreated.getId().toString();
     }
 

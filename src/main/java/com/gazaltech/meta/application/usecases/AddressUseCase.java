@@ -44,8 +44,8 @@ public class AddressUseCase implements AddressPort {
 
         var addressModel = addressModelMapper.domainToModel(address);
 
-        var result = addressRepository.save(addressModel);
-        var addressCreated = addressModelMapper.modelToDomain(result);
+        addressRepository.save(addressModel);
+        var addressCreated = addressModelMapper.modelToDomain(addressModel);
         return addressCreated.getId().toString();
     }
 
