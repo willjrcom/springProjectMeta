@@ -9,6 +9,7 @@ import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.infrastructure.models.AddressModel;
+import com.gazaltech.meta.infrastructure.services.viaCep.ViaCepResponse;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
@@ -22,6 +23,9 @@ public interface AddressMapper {
     @Mapping(target = "id", ignore = true)
     void updateDomainFromDto(UpdateAddressDTO dto, @MappingTarget Address address);
     
+    @Mapping(target = "id", ignore = true)
+    void updateDomainFromViaCepResponse(ViaCepResponse response, @MappingTarget Address address);
+
     // Model mapper
     AddressModel domainToModel(Address address);
 
