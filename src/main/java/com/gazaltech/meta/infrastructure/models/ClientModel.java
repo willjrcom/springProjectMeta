@@ -1,6 +1,5 @@
 package com.gazaltech.meta.infrastructure.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +29,7 @@ public class ClientModel {
     private String email;
     private String cpf;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = true) 
     private AddressModel address;
 }
