@@ -35,10 +35,10 @@ public class ClientController {
     private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     @PostMapping
-    public ResponseEntity<String> createClient(@RequestBody @Valid CreateClientDTO clientDTO) {
-        logger.info("Client created: {}", clientDTO);
+    public ResponseEntity<String> createClient(@RequestBody @Valid CreateClientDTO createClientDTO) {
+        logger.info("Client created: {}", createClientDTO);
 
-        var id = clientUseCase.createClient(clientDTO);
+        var id = clientUseCase.createClient(createClientDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
