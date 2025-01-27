@@ -4,10 +4,12 @@ import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.domain.Uf;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class ViaCepResponse {
         private String cep;
         private String logradouro;
