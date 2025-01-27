@@ -10,33 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.gazaltech.meta.domain.Address;
-import com.gazaltech.meta.domain.Uf;
+import com.gazaltech.meta.factories.AddressFactory;
 import com.gazaltech.meta.infrastructure.models.AddressModel;
 
 @SpringBootTest()
 public class AddressListMapperTest {
-    private final AddressModel addressModel = AddressModel.builder()
-            .id(1L)
-            .street("Rua Piedade")
-            .number(226)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf("SP")
-            .zipCode("18085-430")
-            .build();
 
-    private final Address address = Address.builder()
-            .id(1L)
-            .street("Rua Piedade")
-            .number(226)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf(Uf.valueOf("SP"))
-            .zipCode("18085-430")
-            .build();
-
-    private final List<AddressModel> addressModels = List.of(addressModel, addressModel);
-    private final List<Address> addresses = List.of(address, address);
+    private final List<AddressModel> addressModels = List.of(AddressFactory.addressModel, AddressFactory.addressModel);
+    private final List<Address> addresses = List.of(AddressFactory.address, AddressFactory.address);
 
     @Autowired
     private AddressListMapperImpl addressListMapper;

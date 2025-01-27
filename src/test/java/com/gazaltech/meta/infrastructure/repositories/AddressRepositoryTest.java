@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import com.gazaltech.meta.factories.AddressFactory;
 import com.gazaltech.meta.infrastructure.models.AddressModel;
 
 @DataJpaTest
@@ -15,37 +16,28 @@ public class AddressRepositoryTest {
     @Autowired
     private AddressRepository addressRepository;
 
-    private final AddressModel addressModel = AddressModel.builder()
-    .street("Rua Piedade")
-    .number(226)
-    .neighborhood("Piedade")
-    .city("Rio de Janeiro")
-    .uf("RJ")
-    .zipCode("18085-430")
-    .build();
-
     @Test
     @DisplayName("Save all fields")
     public void testSave_AllFields_Success() {
-        AddressModel result = addressRepository.save(addressModel);
+        AddressModel result = addressRepository.save(AddressFactory.addressModel);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNotNull();
-        assertThat(result.getStreet()).isEqualTo(addressModel.getStreet());
-        assertThat(result.getNumber()).isEqualTo(addressModel.getNumber());
-        assertThat(result.getNeighborhood()).isEqualTo(addressModel.getNeighborhood());
-        assertThat(result.getCity()).isEqualTo(addressModel.getCity());
-        assertThat(result.getUf()).isEqualTo(addressModel.getUf());
-        assertThat(result.getZipCode()).isEqualTo(addressModel.getZipCode());
+        assertThat(result.getStreet()).isEqualTo(AddressFactory.addressModel.getStreet());
+        assertThat(result.getNumber()).isEqualTo(AddressFactory.addressModel.getNumber());
+        assertThat(result.getNeighborhood()).isEqualTo(AddressFactory.addressModel.getNeighborhood());
+        assertThat(result.getCity()).isEqualTo(AddressFactory.addressModel.getCity());
+        assertThat(result.getUf()).isEqualTo(AddressFactory.addressModel.getUf());
+        assertThat(result.getZipCode()).isEqualTo(AddressFactory.addressModel.getZipCode());
     }
 
     @Test
     @DisplayName("Find by ID")
     public void testFindById_ValidID_Success() {
-        addressRepository.save(addressModel);
-        AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
+        addressRepository.save(AddressFactory.addressModel);
+        AddressModel result = addressRepository.findById(AddressFactory.addressModel.getId()).orElse(null);
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(addressModel.getId());
-        assertThat(result.getStreet()).isEqualTo(addressModel.getStreet());
+        assertThat(result.getId()).isEqualTo(AddressFactory.addressModel.getId());
+        assertThat(result.getStreet()).isEqualTo(AddressFactory.addressModel.getStreet());
     }
 
     @Test
@@ -58,9 +50,9 @@ public class AddressRepositoryTest {
     @Test
     @DisplayName("Delete by ID")
     public void testDelete_ValidID_Success() {
-        addressRepository.save(addressModel);
-        addressRepository.deleteById(addressModel.getId());
-        AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
+        addressRepository.save(AddressFactory.addressModel);
+        addressRepository.deleteById(AddressFactory.addressModel.getId());
+        AddressModel result = addressRepository.findById(AddressFactory.addressModel.getId()).orElse(null);
         assertThat(result).isNull();
     }
 
@@ -75,13 +67,13 @@ public class AddressRepositoryTest {
     @Test
     @DisplayName("Update")
     public void testUpdate_NewNumber_Success() {
-        addressModel.setNumber(228);
-        addressRepository.save(addressModel);
+        AddressFactory.addressModel.setNumber(228);
+        addressRepository.save(AddressFactory.addressModel);
 
-        AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
+        AddressModel result = addressRepository.findById(AddressFactory.addressModel.getId()).orElse(null);
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(addressModel.getId());
-        assertThat(result.getStreet()).isEqualTo(addressModel.getStreet());
-        assertThat(result.getNumber()).isEqualTo(addressModel.getNumber());
+        assertThat(result.getId()).isEqualTo(AddressFactory.addressModel.getId());
+        assertThat(result.getStreet()).isEqualTo(AddressFactory.addressModel.getStreet());
+        assertThat(result.getNumber()).isEqualTo(AddressFactory.addressModel.getNumber());
     }
 }

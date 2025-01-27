@@ -1,9 +1,7 @@
 package com.gazaltech.meta.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gazaltech.meta.application.dtos.CreateAddressDTO;
-import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
-import com.gazaltech.meta.infrastructure.models.AddressModel;
+import com.gazaltech.meta.factories.AddressFactory;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
 
 import org.junit.jupiter.api.AfterEach;
@@ -33,37 +31,10 @@ public class AddressIntegrationTest {
         @Autowired
         private AddressRepository addressRepository;
 
-        private final CreateAddressDTO createAddressDTO = CreateAddressDTO.builder()
-                        .street("Rua Piedade")
-                        .number(226)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf("SP")
-                        .zipCode("18085-430")
-                        .build();
-
-        private final UpdateAddressDTO updateAddressDTO = UpdateAddressDTO.builder()
-                        .street("Rua Piedade")
-                        .number(228)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf("SP")
-                        .zipCode("18085-430")
-                        .build();
-
-        private AddressModel addressModel = AddressModel.builder()
-                        .street("Rua Piedade")
-                        .number(226)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf("SP")
-                        .zipCode("18085-430")
-                        .build();
-
         @BeforeEach
         void up() {
-                addressRepository.save(addressModel);
-                addressRepository.save(addressModel);
+                addressRepository.save(AddressFactory.addressModel);
+                addressRepository.save(AddressFactory.addressModel);
         }
 
         @AfterEach
@@ -73,7 +44,7 @@ public class AddressIntegrationTest {
 
         @Test
         void createAddress_AllFields_Success() throws Exception {
-                String json = objectMapper.writeValueAsString(createAddressDTO);
+                String json = objectMapper.writeValueAsString(AddressFactory.createAddressDTO);
 
                 mockMvc.perform(MockMvcRequestBuilders.post("/addresses")
                                 .contentType("application/json")
@@ -86,8 +57,8 @@ public class AddressIntegrationTest {
 
         @Test
         void createAddress_WithoutName_Error() throws Exception {
-                createAddressDTO.setStreet(null);
-                String json = objectMapper.writeValueAsString(createAddressDTO);
+                AddressFactory.createAddressDTO.setStreet(null);
+                String json = objectMapper.writeValueAsString(AddressFactory.createAddressDTO);
 
                 mockMvc.perform(MockMvcRequestBuilders.post("/addresses")
                                 .contentType("application/json")
@@ -100,9 +71,9 @@ public class AddressIntegrationTest {
 
         @Test
         void updateAddress_AllFields_Success() throws Exception {
-                String json = objectMapper.writeValueAsString(updateAddressDTO);
+                String json = objectMapper.writeValueAsString(AddressFactory.updateAddressDTO);
 
-                mockMvc.perform(MockMvcRequestBuilders.put("/addresses/" + addressModel.getId().toString())
+                mockMvc.perform(MockMvcRequestBuilders.put("/addresses/" + AddressFactory.addressModel.getId().toString())
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json")
@@ -113,7 +84,7 @@ public class AddressIntegrationTest {
 
         @Test
         void updateAddress_InvalidID_Error() throws Exception {
-                String json = objectMapper.writeValueAsString(updateAddressDTO);
+                String json = objectMapper.writeValueAsString(AddressFactory.updateAddressDTO);
 
                 mockMvc.perform(MockMvcRequestBuilders.put("/addresses/invalidID")
                                 .contentType("application/json")
@@ -126,7 +97,7 @@ public class AddressIntegrationTest {
 
         @Test
         void updateAddress_NotFoundID_Error() throws Exception {
-                String json = objectMapper.writeValueAsString(updateAddressDTO);
+                String json = objectMapper.writeValueAsString(AddressFactory.updateAddressDTO);
 
                 mockMvc.perform(MockMvcRequestBuilders.put("/addresses/999")
                                 .contentType("application/json")
@@ -139,7 +110,7 @@ public class AddressIntegrationTest {
 
         @Test
         void getAddressByID_ValidID_Success() throws Exception {
-                mockMvc.perform(MockMvcRequestBuilders.get("/addresses/" + addressModel.getId().toString())
+                mockMvc.perform(MockMvcRequestBuilders.get("/addresses/" + AddressFactory.addressModel.getId().toString())
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json"))
@@ -169,7 +140,7 @@ public class AddressIntegrationTest {
 
         @Test
         void deleteAddressByID_ValidID_Success() throws Exception {
-                mockMvc.perform(MockMvcRequestBuilders.delete("/addresses/" + addressModel.getId().toString())
+                mockMvc.perform(MockMvcRequestBuilders.delete("/addresses/" + AddressFactory.addressModel.getId().toString())
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json"))

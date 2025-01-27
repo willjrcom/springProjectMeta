@@ -20,17 +20,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import com.gazaltech.meta.application.dtos.AddressDTO;
-import com.gazaltech.meta.application.dtos.CreateAddressDTO;
-import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.application.mappers.AddressListMapper;
 import com.gazaltech.meta.application.mappers.AddressMapper;
-import com.gazaltech.meta.domain.Address;
-import com.gazaltech.meta.domain.Uf;
-import com.gazaltech.meta.infrastructure.models.AddressModel;
+import com.gazaltech.meta.factories.AddressFactory;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
 import com.gazaltech.meta.infrastructure.services.getCep.ViaCepClient;
-import com.gazaltech.meta.infrastructure.services.getCep.ViaCepResponse;
 
 @ExtendWith(MockitoExtension.class)
 public class AddressUseCaseTest {
@@ -49,99 +43,43 @@ public class AddressUseCaseTest {
         @InjectMocks
         private AddressUseCase addressUseCase;
 
-        private final CreateAddressDTO createAddressDTO = CreateAddressDTO.builder()
-                        .street("Rua Piedade")
-                        .number(226)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf("SP")
-                        .zipCode("18085-430")
-                        .build();
-
-        private final UpdateAddressDTO updateAddressDTO = UpdateAddressDTO.builder()
-                        .street("Rua Piedade")
-                        .number(228)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf("SP")
-                        .zipCode("18085-440")
-                        .build();
-
-        private final AddressDTO addressDTO = AddressDTO.builder()
-                        .id(1L)
-                        .street("Rua Piedade")
-                        .number(226)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf("SP")
-                        .zipCode("18085-430")
-                        .build();
-
-        private final Address address = Address.builder()
-                        .id(1L)
-                        .street("Rua Piedade")
-                        .number(226)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf(Uf.valueOf("SP"))
-                        .zipCode("18085-430")
-                        .build();
-
-        private final AddressModel addressModel = AddressModel.builder()
-                        .id(1L)
-                        .street("Rua Piedade")
-                        .number(226)
-                        .neighborhood("Jardim Leocadia")
-                        .city("Sorocaba")
-                        .uf("SP")
-                        .zipCode("18085-430")
-                        .build();
-
-        private final ViaCepResponse viaCepResponse = ViaCepResponse.builder()
-                        .logradouro("Rua Piedade")
-                        .bairro("Jardim Leocadia")
-                        .localidade("Sorocaba")
-                        .uf("SP")
-                        .cep("18085-430")
-                        .build();
-
         @Test
         @DisplayName("Create Address test")
         void testCreateAddress_AllFields_Success() {
-                var cep = createAddressDTO.getZipCode().replace("-", "");
-                when(viaCepClient.getAddressByZipCode(cep)).thenReturn(viaCepResponse);
+                var cep = AddressFactory.createAddressDTO.getZipCode().replace("-", "");
+                when(viaCepClient.getAddressByZipCode(cep)).thenReturn(AddressFactory.viaCepResponse);
 
-                when(addressMapper.createDtoToDomain(createAddressDTO)).thenReturn(address);
-                when(addressMapper.domainToModel(address)).thenReturn(addressModel);
-                when(addressMapper.modelToDomain(addressModel)).thenReturn(address);
+                when(addressMapper.createDtoToDomain(AddressFactory.createAddressDTO)).thenReturn(AddressFactory.address);
+                when(addressMapper.domainToModel(AddressFactory.address)).thenReturn(AddressFactory.addressModel);
+                when(addressMapper.modelToDomain(AddressFactory.addressModel)).thenReturn(AddressFactory.address);
 
-                when(addressRepository.save(addressModel)).thenReturn(addressModel);
+                when(addressRepository.save(AddressFactory.addressModel)).thenReturn(AddressFactory.addressModel);
 
-                var id = addressUseCase.createAddress(createAddressDTO);
-                assertEquals(id, addressModel.getId().toString());
+                var id = addressUseCase.createAddress(AddressFactory.createAddressDTO);
+                assertEquals(id, AddressFactory.addressModel.getId().toString());
         }
 
         @Test
         @DisplayName("Delete Address test")
         void testDeleteAddressByID_ValidID_Success() {
-                when(addressRepository.existsById(addressModel.getId())).thenReturn(true);
-                addressUseCase.deleteAddressByID(addressModel.getId());
+                when(addressRepository.existsById(AddressFactory.addressModel.getId())).thenReturn(true);
+                addressUseCase.deleteAddressByID(AddressFactory.addressModel.getId());
 
-                verify(addressRepository, times(1)).deleteById(addressModel.getId());
-                verify(addressRepository, times(1)).existsById(addressModel.getId());
+                verify(addressRepository, times(1)).deleteById(AddressFactory.addressModel.getId());
+                verify(addressRepository, times(1)).existsById(AddressFactory.addressModel.getId());
         }
 
         @Test
         @DisplayName("Get Address by ID test")
         void testGetAddressByID_ValidID_Success() {
-                when(addressMapper.domainToDto(address)).thenReturn(addressDTO);
-                when(addressMapper.modelToDomain(addressModel)).thenReturn(address);
+                when(addressMapper.domainToDto(AddressFactory.address)).thenReturn(AddressFactory.addressDTO);
+                when(addressMapper.modelToDomain(AddressFactory.addressModel)).thenReturn(AddressFactory.address);
 
-                when(addressRepository.findById(addressModel.getId())).thenReturn(Optional.of(addressModel));
+                when(addressRepository.findById(AddressFactory.addressModel.getId())).thenReturn(Optional.of(AddressFactory.addressModel));
 
-                var addressFound = addressUseCase.getAddressByID(addressModel.getId());
+                var addressFound = addressUseCase.getAddressByID(AddressFactory.addressModel.getId());
 
-                assertEquals(addressFound.getId(), addressModel.getId());
+                assertEquals(addressFound.getId(), AddressFactory.addressModel.getId());
         }
 
         @Test
@@ -150,11 +88,11 @@ public class AddressUseCaseTest {
                 Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
 
                 when(addressRepository.findAll(pageable))
-                                .thenReturn(new PageImpl<>(List.of(addressModel, addressModel)));
-                when(addressListMapper.modelsToDomains(List.of(addressModel, addressModel)))
-                                .thenReturn(List.of(address, address));
-                when(addressListMapper.domainsToDtos(List.of(address, address)))
-                                .thenReturn(List.of(addressDTO, addressDTO));
+                                .thenReturn(new PageImpl<>(List.of(AddressFactory.addressModel, AddressFactory.addressModel)));
+                when(addressListMapper.modelsToDomains(List.of(AddressFactory.addressModel, AddressFactory.addressModel)))
+                                .thenReturn(List.of(AddressFactory.address, AddressFactory.address));
+                when(addressListMapper.domainsToDtos(List.of(AddressFactory.address, AddressFactory.address)))
+                                .thenReturn(List.of(AddressFactory.addressDTO, AddressFactory.addressDTO));
 
                 var addresses = addressUseCase.getAllAddresses(0, 10);
 
@@ -164,20 +102,20 @@ public class AddressUseCaseTest {
         @Test
         @DisplayName("Update Address test")
         void testUpdateAddress_NewAddress_Success() {
-                when(addressRepository.findById(addressModel.getId())).thenReturn(Optional.of(addressModel));
-                var cep = createAddressDTO.getZipCode().replace("-", "");
-                when(viaCepClient.getAddressByZipCode(cep)).thenReturn(viaCepResponse);
+                when(addressRepository.findById(AddressFactory.addressModel.getId())).thenReturn(Optional.of(AddressFactory.addressModel));
+                var cep = AddressFactory.createAddressDTO.getZipCode().replace("-", "");
+                when(viaCepClient.getAddressByZipCode(cep)).thenReturn(AddressFactory.viaCepResponse);
 
-                when(addressMapper.domainToModel(address)).thenReturn(addressModel);
-                when(addressMapper.modelToDomain(addressModel)).thenReturn(address);
+                when(addressMapper.domainToModel(AddressFactory.address)).thenReturn(AddressFactory.addressModel);
+                when(addressMapper.modelToDomain(AddressFactory.addressModel)).thenReturn(AddressFactory.address);
 
-                when(addressRepository.save(addressModel)).thenReturn(addressModel);
+                when(addressRepository.save(AddressFactory.addressModel)).thenReturn(AddressFactory.addressModel);
 
-                addressUseCase.updateAddress(addressModel.getId(), updateAddressDTO);
+                addressUseCase.updateAddress(AddressFactory.addressModel.getId(), AddressFactory.updateAddressDTO);
 
-                verify(addressRepository, times(1)).save(addressModel);
+                verify(addressRepository, times(1)).save(AddressFactory.addressModel);
 
-                assertEquals(addressModel.getId(), addressModel.getId());
-                assertNotEquals(addressModel.getNumber(), updateAddressDTO.getNumber());
+                assertEquals(AddressFactory.addressModel.getId(), AddressFactory.addressModel.getId());
+                assertNotEquals(AddressFactory.addressModel.getNumber(), AddressFactory.updateAddressDTO.getNumber());
         }
 }

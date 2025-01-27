@@ -8,51 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.gazaltech.meta.application.dtos.CreateAddressDTO;
-import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
-import com.gazaltech.meta.domain.Address;
-import com.gazaltech.meta.domain.Uf;
-import com.gazaltech.meta.infrastructure.models.AddressModel;
+import com.gazaltech.meta.factories.AddressFactory;
 
 @SpringBootTest()
 public class AddressMapperTest {
-    private final CreateAddressDTO createAddressDTO = CreateAddressDTO.builder()
-            .street("Rua Piedade")
-            .number(226)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf("SP")
-            .zipCode("18085-430")
-            .build();
-
-    private final UpdateAddressDTO updateAddressDTO = UpdateAddressDTO.builder()
-            .street("Rua 7 de Setembro")
-            .number(226)
-            .neighborhood("Morumbi")
-            .city("Sao Paulo")
-            .uf("SP")
-            .zipCode("19085-330")
-            .build();
-
-    private final Address address = Address.builder()
-            .id(1L)
-            .street("Rua Piedade")
-            .number(226)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf(Uf.valueOf("SP"))
-            .zipCode("18085-430")
-            .build();
-
-    private final AddressModel addressModel = AddressModel.builder()
-            .id(1L)
-            .street("Rua Piedade")
-            .number(226)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf("SP")
-            .zipCode("18085-430")
-            .build();
 
     @Autowired
     private AddressMapperImpl addressMapper;
@@ -60,86 +19,86 @@ public class AddressMapperTest {
     @Test
     @DisplayName("Create to Domain test")
     void testCreateDtoToDomain() {
-        var domain = addressMapper.createDtoToDomain(createAddressDTO);
+        var domain = addressMapper.createDtoToDomain(AddressFactory.createAddressDTO);
 
         assertThat(domain.getId()).isNull();
-        assertEquals(domain.getStreet(), createAddressDTO.getStreet());
-        assertEquals(domain.getNumber(), createAddressDTO.getNumber());
-        assertEquals(domain.getNeighborhood(), createAddressDTO.getNeighborhood());
-        assertEquals(domain.getCity(), createAddressDTO.getCity());
-        assertEquals(domain.getUf().toString(), createAddressDTO.getUf());
-        assertEquals(domain.getZipCode(), createAddressDTO.getZipCode());
+        assertEquals(domain.getStreet(), AddressFactory.createAddressDTO.getStreet());
+        assertEquals(domain.getNumber(), AddressFactory.createAddressDTO.getNumber());
+        assertEquals(domain.getNeighborhood(), AddressFactory.createAddressDTO.getNeighborhood());
+        assertEquals(domain.getCity(), AddressFactory.createAddressDTO.getCity());
+        assertEquals(domain.getUf().toString(), AddressFactory.createAddressDTO.getUf());
+        assertEquals(domain.getZipCode(), AddressFactory.createAddressDTO.getZipCode());
     }
 
     @Test
     @DisplayName("Domain to DTO test")
     void testDomainToDto() {
-        var dto = addressMapper.domainToDto(address);
+        var dto = addressMapper.domainToDto(AddressFactory.address);
 
-        assertEquals(dto.getId(), address.getId());
-        assertEquals(dto.getStreet(), address.getStreet());
-        assertEquals(dto.getNumber(), address.getNumber());
-        assertEquals(dto.getNeighborhood(), address.getNeighborhood());
-        assertEquals(dto.getCity(), address.getCity());
-        assertEquals(dto.getUf(), address.getUf().toString());
-        assertEquals(dto.getZipCode(), address.getZipCode());
+        assertEquals(dto.getId(), AddressFactory.address.getId());
+        assertEquals(dto.getStreet(), AddressFactory.address.getStreet());
+        assertEquals(dto.getNumber(), AddressFactory.address.getNumber());
+        assertEquals(dto.getNeighborhood(), AddressFactory.address.getNeighborhood());
+        assertEquals(dto.getCity(), AddressFactory.address.getCity());
+        assertEquals(dto.getUf(), AddressFactory.address.getUf().toString());
+        assertEquals(dto.getZipCode(), AddressFactory.address.getZipCode());
     }
 
     @Test
     @DisplayName("Domain to Model test")
     void testDomainToModel() {
-        var model = addressMapper.domainToModel(address);
+        var model = addressMapper.domainToModel(AddressFactory.address);
 
-        assertEquals(model.getId(), address.getId());
-        assertEquals(model.getStreet(), address.getStreet());
-        assertEquals(model.getNumber(), address.getNumber());
-        assertEquals(model.getNeighborhood(), address.getNeighborhood());
-        assertEquals(model.getCity(), address.getCity());
-        assertEquals(model.getUf(), address.getUf().toString());
-        assertEquals(model.getZipCode(), address.getZipCode());
+        assertEquals(model.getId(), AddressFactory.address.getId());
+        assertEquals(model.getStreet(), AddressFactory.address.getStreet());
+        assertEquals(model.getNumber(), AddressFactory.address.getNumber());
+        assertEquals(model.getNeighborhood(), AddressFactory.address.getNeighborhood());
+        assertEquals(model.getCity(), AddressFactory.address.getCity());
+        assertEquals(model.getUf(), AddressFactory.address.getUf().toString());
+        assertEquals(model.getZipCode(), AddressFactory.address.getZipCode());
     }
 
     @Test
     @DisplayName("Model to Domain test")
     void testModelToDomain() {
-        var domain = addressMapper.modelToDomain(addressModel);
+        var domain = addressMapper.modelToDomain(AddressFactory.addressModel);
 
-        assertEquals(domain.getId(), addressModel.getId());
-        assertEquals(domain.getStreet(), addressModel.getStreet());
-        assertEquals(domain.getNumber(), addressModel.getNumber());
-        assertEquals(domain.getNeighborhood(), addressModel.getNeighborhood());
-        assertEquals(domain.getCity(), addressModel.getCity());
-        assertEquals(domain.getUf().toString(), addressModel.getUf());
-        assertEquals(domain.getZipCode(), addressModel.getZipCode());
+        assertEquals(domain.getId(), AddressFactory.addressModel.getId());
+        assertEquals(domain.getStreet(), AddressFactory.addressModel.getStreet());
+        assertEquals(domain.getNumber(), AddressFactory.addressModel.getNumber());
+        assertEquals(domain.getNeighborhood(), AddressFactory.addressModel.getNeighborhood());
+        assertEquals(domain.getCity(), AddressFactory.addressModel.getCity());
+        assertEquals(domain.getUf().toString(), AddressFactory.addressModel.getUf());
+        assertEquals(domain.getZipCode(), AddressFactory.addressModel.getZipCode());
     }
 
     @Test
     @DisplayName("Update Domain from DTO test")
     void testUpdateDomainFromDto() {
-        addressMapper.updateDomainFromDto(updateAddressDTO, address);
+        addressMapper.updateDomainFromDto(AddressFactory.updateAddressDTO, AddressFactory.address);
 
-        assertThat(address.getId()).isNotNull();
-        assertEquals(address.getStreet(), updateAddressDTO.getStreet());
-        assertEquals(address.getStreet(), updateAddressDTO.getStreet());
-        assertEquals(address.getNumber(), updateAddressDTO.getNumber());
-        assertEquals(address.getNeighborhood(), updateAddressDTO.getNeighborhood());
-        assertEquals(address.getCity(), updateAddressDTO.getCity());
-        assertEquals(address.getUf().toString(), updateAddressDTO.getUf());
-        assertEquals(address.getZipCode(), updateAddressDTO.getZipCode());
+        assertThat(AddressFactory.address.getId()).isNotNull();
+        assertEquals(AddressFactory.address.getStreet(), AddressFactory.updateAddressDTO.getStreet());
+        assertEquals(AddressFactory.address.getStreet(), AddressFactory.updateAddressDTO.getStreet());
+        assertEquals(AddressFactory.address.getNumber(), AddressFactory.updateAddressDTO.getNumber());
+        assertEquals(AddressFactory.address.getNeighborhood(), AddressFactory.updateAddressDTO.getNeighborhood());
+        assertEquals(AddressFactory.address.getCity(), AddressFactory.updateAddressDTO.getCity());
+        assertEquals(AddressFactory.address.getUf().toString(), AddressFactory.updateAddressDTO.getUf());
+        assertEquals(AddressFactory.address.getZipCode(), AddressFactory.updateAddressDTO.getZipCode());
     }
 
     @Test
     @DisplayName("Update Domain from Via Cep Response test")
     void updateDomainFromViaCepResponse() {
-        addressMapper.updateDomainFromDto(updateAddressDTO, address);
+        addressMapper.updateDomainFromDto(AddressFactory.updateAddressDTO, AddressFactory.address);
 
-        assertThat(address.getId()).isNotNull();
-        assertEquals(address.getStreet(), updateAddressDTO.getStreet());
-        assertEquals(address.getStreet(), updateAddressDTO.getStreet());
-        assertEquals(address.getNumber(), updateAddressDTO.getNumber());
-        assertEquals(address.getNeighborhood(), updateAddressDTO.getNeighborhood());
-        assertEquals(address.getCity(), updateAddressDTO.getCity());
-        assertEquals(address.getUf().toString(), updateAddressDTO.getUf());
-        assertEquals(address.getZipCode(), updateAddressDTO.getZipCode());
+        assertThat(AddressFactory.address.getId()).isNotNull();
+        assertEquals(AddressFactory.address.getStreet(), AddressFactory.updateAddressDTO.getStreet());
+        assertEquals(AddressFactory.address.getStreet(), AddressFactory.updateAddressDTO.getStreet());
+        assertEquals(AddressFactory.address.getNumber(), AddressFactory.updateAddressDTO.getNumber());
+        assertEquals(AddressFactory.address.getNeighborhood(), AddressFactory.updateAddressDTO.getNeighborhood());
+        assertEquals(AddressFactory.address.getCity(), AddressFactory.updateAddressDTO.getCity());
+        assertEquals(AddressFactory.address.getUf().toString(), AddressFactory.updateAddressDTO.getUf());
+        assertEquals(AddressFactory.address.getZipCode(), AddressFactory.updateAddressDTO.getZipCode());
     }
 }

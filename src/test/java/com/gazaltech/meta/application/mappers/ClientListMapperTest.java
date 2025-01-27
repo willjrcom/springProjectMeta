@@ -10,26 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.gazaltech.meta.domain.Client;
+import com.gazaltech.meta.factories.ClientFactory;
 import com.gazaltech.meta.infrastructure.models.ClientModel;
 
 @SpringBootTest()
 public class ClientListMapperTest {
-    private final ClientModel clientModel = ClientModel.builder()
-            .id(1L)
-            .name("William")
-            .email("will@gmail.com")
-            .cpf("436.377.998-55")
-            .build();
 
-    private final Client client = Client.builder()
-            .id(1L)
-            .name("William")
-            .email("will@gmail.com")
-            .cpf("436.377.998-55")
-            .build();
-
-    private final List<ClientModel> clientModels = List.of(clientModel, clientModel);
-    private final List<Client> clients = List.of(client, client);
+    private final List<ClientModel> clientModels = List.of(ClientFactory.clientModel, ClientFactory.clientModel);
+    private final List<Client> clients = List.of(ClientFactory.client, ClientFactory.client);
 
     @Autowired
     private ClientListMapperImpl clientListMapper;
