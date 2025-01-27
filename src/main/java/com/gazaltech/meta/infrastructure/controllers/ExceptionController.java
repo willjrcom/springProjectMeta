@@ -11,7 +11,7 @@ import com.gazaltech.meta.shared.exceptions.NotFoundException;
 @RestControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
