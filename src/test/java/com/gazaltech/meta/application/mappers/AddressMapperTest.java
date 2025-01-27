@@ -121,4 +121,18 @@ public class AddressMapperTest {
         assertEquals(address.getUf().toString(), updateAddressDTO.getUf());
         assertEquals(address.getZipCode(), updateAddressDTO.getZipCode());
     }
+
+    @Test
+    void updateDomainFromViaCepResponse() {
+        addressMapper.updateDomainFromDto(updateAddressDTO, address);
+
+        assertThat(address.getId()).isNotNull();
+        assertEquals(address.getStreet(), updateAddressDTO.getStreet());
+        assertEquals(address.getStreet(), updateAddressDTO.getStreet());
+        assertEquals(address.getNumber(), updateAddressDTO.getNumber());
+        assertEquals(address.getNeighborhood(), updateAddressDTO.getNeighborhood());
+        assertEquals(address.getCity(), updateAddressDTO.getCity());
+        assertEquals(address.getUf().toString(), updateAddressDTO.getUf());
+        assertEquals(address.getZipCode(), updateAddressDTO.getZipCode());
+    }
 }
