@@ -17,10 +17,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Successful POST request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-									"});",
-									""
+									"let response = pm.response.json()",
+									"",
+									"if (response != null) {",
+									"    pm.collectionVariables.set(\"client_id\", response)",
+									"}"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -42,7 +43,99 @@
 						"url": "{{base_url}}/clients",
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "create",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"William\",\n    \"email\": \"will@gmail.com\",\n    \"cpf\": \"436.377.998-55\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 21:59:28 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "31"
+						},
+						{
+							"name": "invalid payload",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"will@gmail.com\",\n    \"cpf\": \"436.377.998-55\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients"
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "587"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:09:22 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "Validation failed for argument [0] in public org.springframework.http.ResponseEntity<java.lang.String> com.gazaltech.meta.infrastructure.controllers.ClientController.createClient(com.gazaltech.meta.application.dtos.CreateClientDTO): [Field error in object 'createClientDTO' on field 'name': rejected value [null]; codes [NotNull.createClientDTO.name,NotNull.name,NotNull.java.lang.String,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [createClientDTO.name,name]; arguments []; default message [name]]; default message [Name is required]] "
+						}
+					]
 				},
 				{
 					"name": "Get by id",
@@ -63,10 +156,112 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/clients/{{client_id}}",
+						"url": "{{base_url}}/clients/id",
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get by id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/clients/{{client_id}}"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 21:59:36 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 31,\n    \"name\": \"William\",\n    \"email\": \"will@gmail.com\",\n    \"cpf\": \"436.377.998-55\",\n    \"address\": null\n}"
+						},
+						{
+							"name": "not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/clients/{{client_id}}"
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "16"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:00:12 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Client not found"
+						},
+						{
+							"name": "bad request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/clients/id"
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "131"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:01:59 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \"id\""
+						}
+					]
 				},
 				{
 					"name": "Get all",
@@ -108,7 +303,114 @@
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Get all without addresses",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients?size=10&page=0",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:02:42 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 23,\n        \"name\": \"William Junior\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": null\n    },\n    {\n        \"id\": 24,\n        \"name\": \"William Junior\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": null\n    },\n    {\n        \"id\": 25,\n        \"name\": \"William Junior\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": null\n    },\n    {\n        \"id\": 26,\n        \"name\": \"William Junior\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": null\n    },\n    {\n        \"id\": 27,\n        \"name\": \"William Junior\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": null\n    },\n    {\n        \"id\": 28,\n        \"name\": null,\n        \"email\": null,\n        \"cpf\": null,\n        \"address\": null\n    },\n    {\n        \"id\": 29,\n        \"name\": null,\n        \"email\": null,\n        \"cpf\": null,\n        \"address\": null\n    },\n    {\n        \"id\": 30,\n        \"name\": \"William\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": null\n    },\n    {\n        \"id\": 31,\n        \"name\": \"William\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": null\n    }\n]"
+						},
+						{
+							"name": "Get all with addresses",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients?size=10&page=0",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:18:51 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 26,\n        \"name\": \"William Junior\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": {\n            \"id\": 3,\n            \"street\": \"Rua Piedade\",\n            \"number\": 226,\n            \"complement\": \"\",\n            \"reference\": \"\",\n            \"neighborhood\": \"Jardim Leocádia\",\n            \"city\": \"Sorocaba\",\n            \"uf\": \"SP\",\n            \"zip_code\": \"18085-430\"\n        }\n    },\n    {\n        \"id\": 27,\n        \"name\": \"William Junior\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": {\n            \"id\": 3,\n            \"street\": \"Rua Piedade\",\n            \"number\": 226,\n            \"complement\": \"\",\n            \"reference\": \"\",\n            \"neighborhood\": \"Jardim Leocádia\",\n            \"city\": \"Sorocaba\",\n            \"uf\": \"SP\",\n            \"zip_code\": \"18085-430\"\n        }\n    },\n    {\n        \"id\": 28,\n        \"name\": null,\n        \"email\": null,\n        \"cpf\": null,\n        \"address\": {\n            \"id\": 3,\n            \"street\": \"Rua Piedade\",\n            \"number\": 226,\n            \"complement\": \"\",\n            \"reference\": \"\",\n            \"neighborhood\": \"Jardim Leocádia\",\n            \"city\": \"Sorocaba\",\n            \"uf\": \"SP\",\n            \"zip_code\": \"18085-430\"\n        }\n    },\n    {\n        \"id\": 29,\n        \"name\": null,\n        \"email\": null,\n        \"cpf\": null,\n        \"address\": {\n            \"id\": 3,\n            \"street\": \"Rua Piedade\",\n            \"number\": 226,\n            \"complement\": \"\",\n            \"reference\": \"\",\n            \"neighborhood\": \"Jardim Leocádia\",\n            \"city\": \"Sorocaba\",\n            \"uf\": \"SP\",\n            \"zip_code\": \"18085-430\"\n        }\n    },\n    {\n        \"id\": 30,\n        \"name\": \"William\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": {\n            \"id\": 3,\n            \"street\": \"Rua Piedade\",\n            \"number\": 226,\n            \"complement\": \"\",\n            \"reference\": \"\",\n            \"neighborhood\": \"Jardim Leocádia\",\n            \"city\": \"Sorocaba\",\n            \"uf\": \"SP\",\n            \"zip_code\": \"18085-430\"\n        }\n    },\n    {\n        \"id\": 31,\n        \"name\": \"William\",\n        \"email\": \"will@gmail.com\",\n        \"cpf\": \"436.377.998-55\",\n        \"address\": {\n            \"id\": 3,\n            \"street\": \"Rua Piedade\",\n            \"number\": 226,\n            \"complement\": \"\",\n            \"reference\": \"\",\n            \"neighborhood\": \"Jardim Leocádia\",\n            \"city\": \"Sorocaba\",\n            \"uf\": \"SP\",\n            \"zip_code\": \"18085-430\"\n        }\n    }\n]"
+						}
+					]
 				},
 				{
 					"name": "Update by id",
@@ -128,11 +430,11 @@
 						}
 					],
 					"request": {
-						"method": "PATCH",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"William\"\n}",
+							"raw": "{\n\t\"name\": \"William Junior\",\n    \"email\": \"will@gmail.com\",\n    \"cpf\": \"436.377.998-55\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -142,7 +444,44 @@
 						"url": "{{base_url}}/clients/{{client_id}}",
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Update by id",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"William Junior\",\n    \"email\": \"will@gmail.com\",\n    \"cpf\": \"436.377.998-55\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients/{{client_id}}"
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:08:23 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Delete by id",
@@ -176,7 +515,128 @@
 						"url": "{{base_url}}/clients/{{client_id}}",
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "not found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients/{{client_id}}"
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:02:55 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Client not found with id: 999"
+						},
+						{
+							"name": "Delete by id",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients/{{client_id}}"
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:03:10 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "bad request",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients/id"
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "131"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:03:19 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \"id\""
+						}
+					]
 				},
 				{
 					"name": "Add address",
@@ -210,7 +670,84 @@
 						"url": "{{base_url}}/clients/{{client_id}}/address/{{address_id}}",
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Add address",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients/{{client_id}}/address/{{address_id}}"
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:12:15 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "client already with address",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients/{{client_id}}/address/{{address_id}}"
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:15:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "Client already has an address"
+						}
+					]
 				},
 				{
 					"name": "Remove address",
@@ -241,10 +778,47 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/clients/{{client_id}}/address/{{address_id}}",
+						"url": "{{base_url}}/clients/{{client_id}}/address",
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Remove address",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/clients/{{client_id}}"
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:16:25 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},
@@ -258,10 +832,21 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Successful POST request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-									"});",
-									""
+									"let response = pm.response.json()",
+									"",
+									"if (response != null) {",
+									"    pm.collectionVariables.set(\"address_id\", response)",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(pm.request)"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -273,7 +858,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"street\": \"Rua Piedade\",\n    \"number\": \"226\",\n    \"neighborhood\": \"Jardim Leocadia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"country\": \"Brasil\",\n    \"zip_code\": \"18085-430\"\n}",
+							"raw": "{\n\t\"street\": \"Rua Piedade\",\n    \"number\": 226,\n    \"complement\": \"\",\n    \"reference\": \"\",\n    \"neighborhood\": \"Jardim Leocadia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"zip_code\": \"18085-430\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -283,7 +868,52 @@
 						"url": "{{base_url}}/addresses",
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "create",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"street\": \"Rua Piedade\",\n    \"number\": 226,\n    \"complement\": \"\",\n    \"reference\": \"\",\n    \"neighborhood\": \"Jardim Leocadia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"zip_code\": \"18085-430\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/addresses"
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:03:50 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "1"
+						}
+					]
 				},
 				{
 					"name": "get by id",
@@ -307,7 +937,198 @@
 						"url": "{{base_url}}/addresses/{{address_id}}",
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "get by id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/addresses/{{address_id}}"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:11:49 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"street\": \"Rua Piedade\",\n    \"number\": 226,\n    \"complement\": \"\",\n    \"reference\": \"\",\n    \"neighborhood\": \"Jardim Leocádia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"zip_code\": \"18085-430\"\n}"
+						}
+					]
+				},
+				{
+					"name": "get by zip code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/addresses/zip-code/18085-430",
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": [
+						{
+							"name": "get by zip code",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/addresses/zip-code/18085-430"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:11:01 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"street\": \"Rua Piedade\",\n        \"number\": 226,\n        \"complement\": \"\",\n        \"reference\": \"\",\n        \"neighborhood\": \"Jardim Leocádia\",\n        \"city\": \"Sorocaba\",\n        \"uf\": \"SP\",\n        \"zip_code\": \"18085-430\"\n    }\n]"
+						},
+						{
+							"name": "get by zip code",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/addresses/zip-code/18085-430"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:13:00 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"street\": \"Rua Piedade\",\n        \"number\": 226,\n        \"complement\": \"\",\n        \"reference\": \"\",\n        \"neighborhood\": \"Jardim Leocádia\",\n        \"city\": \"Sorocaba\",\n        \"uf\": \"SP\",\n        \"zip_code\": \"18085-430\"\n    },\n    {\n        \"id\": 2,\n        \"street\": \"Rua Piedade\",\n        \"number\": 228,\n        \"complement\": \"\",\n        \"reference\": \"\",\n        \"neighborhood\": \"Jardim Leocádia\",\n        \"city\": \"Sorocaba\",\n        \"uf\": \"SP\",\n        \"zip_code\": \"18085-430\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "search by zip code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/addresses/search-zip-code/18085430",
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": [
+						{
+							"name": "search by zip code",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/addresses/search-zip-code/18085430"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:11:11 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": null,\n    \"street\": \"Rua Piedade\",\n    \"number\": null,\n    \"complement\": null,\n    \"reference\": null,\n    \"neighborhood\": \"Jardim Leocádia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"zip_code\": \"18085-430\"\n}"
+						}
+					]
 				},
 				{
 					"name": "get all",
@@ -349,7 +1170,61 @@
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "get all",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/addresses?page=0&size=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"addresses"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:13:09 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"street\": \"Rua Piedade\",\n        \"number\": 226,\n        \"complement\": \"\",\n        \"reference\": \"\",\n        \"neighborhood\": \"Jardim Leocádia\",\n        \"city\": \"Sorocaba\",\n        \"uf\": \"SP\",\n        \"zip_code\": \"18085-430\"\n    },\n    {\n        \"id\": 2,\n        \"street\": \"Rua Piedade\",\n        \"number\": 228,\n        \"complement\": \"\",\n        \"reference\": \"\",\n        \"neighborhood\": \"Jardim Leocádia\",\n        \"city\": \"Sorocaba\",\n        \"uf\": \"SP\",\n        \"zip_code\": \"18085-430\"\n    }\n]"
+						}
+					]
 				},
 				{
 					"name": "Update by id",
@@ -369,11 +1244,11 @@
 						}
 					],
 					"request": {
-						"method": "PATCH",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"street\": \"Rua Piedade\",\n    \"number\": \"226\",\n    \"neighborhood\": \"Jardim Leocadia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"country\": \"Brasil\",\n    \"zip_code\": \"18085-430\"\n}",
+							"raw": "{\n\t\"street\": \"Rua 7 de Setembro\",\n    \"number\": \"226\",\n    \"complement\": \"\",\n    \"reference\": \"\",\n    \"neighborhood\": \"Jardim Leocadia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"country\": \"Brasil\",\n    \"zip_code\": \"18085-430\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -383,7 +1258,44 @@
 						"url": "{{base_url}}/addresses/{{address_id}}",
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Update by id",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"street\": \"Rua 7 de Setembro\",\n    \"number\": \"226\",\n    \"complement\": \"\",\n    \"reference\": \"\",\n    \"neighborhood\": \"Jardim Leocadia\",\n    \"city\": \"Sorocaba\",\n    \"uf\": \"SP\",\n    \"country\": \"Brasil\",\n    \"zip_code\": \"18085-430\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/addresses/{{address_id}}"
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:10:06 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Delete by id",
@@ -417,7 +1329,44 @@
 						"url": "{{base_url}}/addresses/{{address_id}}",
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Delete by id",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/addresses/{{address_id}}"
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 27 Jan 2025 22:13:17 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		}
