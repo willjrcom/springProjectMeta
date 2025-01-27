@@ -9,33 +9,33 @@ import com.gazaltech.meta.infrastructure.models.AddressModel;
 import com.gazaltech.meta.infrastructure.services.getCep.ViaCepResponse;
 
 public class AddressFactory {
-    public static CreateAddressDTO createAddressDTO = CreateAddressDTO.builder()
-            .street("Rua Piedade")
-            .number(226)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf("SP")
-            .zipCode("18085-430")
-            .build();
+        public static CreateAddressDTO createAddressDTO = CreateAddressDTO.builder()
+                        .street("Rua Piedade")
+                        .number(226)
+                        .neighborhood("Jardim Leocadia")
+                        .city("Sorocaba")
+                        .uf("SP")
+                        .zipCode("18085-430")
+                        .build();
 
-    public static UpdateAddressDTO updateAddressDTO = UpdateAddressDTO.builder()
-            .street("Rua Piedade")
-            .number(228)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf("SP")
-            .zipCode("18085-440")
-            .build();
+        public static UpdateAddressDTO updateAddressDTO = UpdateAddressDTO.builder()
+                        .street("Rua Piedade")
+                        .number(228)
+                        .neighborhood("Jardim Leocadia")
+                        .city("Sorocaba")
+                        .uf("SP")
+                        .zipCode("18085-440")
+                        .build();
 
-    public static AddressDTO addressDTO = AddressDTO.builder()
-            .id(1L)
-            .street("Rua Piedade")
-            .number(226)
-            .neighborhood("Jardim Leocadia")
-            .city("Sorocaba")
-            .uf("SP")
-            .zipCode("18085-430")
-            .build();
+        public static AddressDTO addressDTO = AddressDTO.builder()
+                        .id(1L)
+                        .street("Rua Piedade")
+                        .number(226)
+                        .neighborhood("Jardim Leocadia")
+                        .city("Sorocaba")
+                        .uf("SP")
+                        .zipCode("18085-430")
+                        .build();
 
         public static Address address = Address.builder()
                         .id(1L)
