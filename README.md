@@ -64,7 +64,7 @@ $ mvn spring-boot:run
 
 ### **6. Acessar a Documentação da API**
 
-Após iniciar a aplicação, você pode acessar a documentação Swagger:
+Após iniciar a aplicação, você pode acessar a documentação através do Postman disponibilizado no projeto ou do Swagger:
 
 - URL: `http://localhost:8080/swagger-ui.html`
 
