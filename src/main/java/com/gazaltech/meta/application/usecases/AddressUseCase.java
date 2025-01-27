@@ -40,7 +40,7 @@ public class AddressUseCase implements AddressPort {
 
         var cep = address.getZipCode().replace("-", "");
         var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
-        viaCepResponse.updateDomain(address);
+        addressMapper.updateDomainFromViaCepResponse(viaCepResponse, address);
 
         var addressModel = addressMapper.domainToModel(address);
 
@@ -51,21 +51,21 @@ public class AddressUseCase implements AddressPort {
 
     @Override
     public void updateAddress(Long id, UpdateAddressDTO addressDTO) {
-        addressRepository.findById(id)
-                .map(addressModel -> addressMapper.modelToDomain(addressModel))
-                .map(address -> {
-                    addressMapper.updateDomainFromDto(addressDTO, address);
+        var optionalAddressModel = addressRepository.findById(id);
+        if (!optionalAddressModel.isPresent()) {
+            throw new NotFoundException("Address not found");
+        }
 
-                    var cep = address.getZipCode().replace("-", "");
-                    var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
+        var address = addressMapper.modelToDomain(optionalAddressModel.get());
+        addressMapper.updateDomainFromDto(addressDTO, address);
 
-                    viaCepResponse.updateDomain(address);
-                    return address;
-                }).map(address -> addressMapper.domainToModel(address))
-                .map(addressModel -> {
-                    return addressRepository.save(addressModel);
-                })
-                .orElseThrow(() -> new NotFoundException("Address not found"));
+        var cep = address.getZipCode().replace("-", "");
+        var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
+
+        addressMapper.updateDomainFromViaCepResponse(viaCepResponse, address);
+        var addressModel = addressMapper.domainToModel(address);
+
+        addressRepository.save(addressModel);
     }
 
     @Override
