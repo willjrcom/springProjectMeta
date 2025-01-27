@@ -1,5 +1,5 @@
 package com.gazaltech.meta.application.ports.address;
 
-public interface DeleteAddress {
+public interface DeleteAddressPort {
     void deleteAddressByID(Long id);
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.gazaltech.meta.application.dtos.AddressDTO;
 
-public interface GetAddress {
+public interface GetAddressPort {
 
     AddressDTO getAddressByID(Long id);
 
