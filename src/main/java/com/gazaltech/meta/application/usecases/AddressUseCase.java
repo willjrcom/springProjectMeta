@@ -16,7 +16,7 @@ import com.gazaltech.meta.application.mappers.AddressListMapper;
 import com.gazaltech.meta.application.mappers.AddressMapper;
 import com.gazaltech.meta.application.ports.address.AddressPort;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
-import com.gazaltech.meta.infrastructure.services.viaCep.ViaCepClient;
+import com.gazaltech.meta.infrastructure.services.getCep.ViaCepClient;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
 
 @Service

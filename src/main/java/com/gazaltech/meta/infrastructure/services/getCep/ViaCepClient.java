@@ -1,13 +1,15 @@
-package com.gazaltech.meta.infrastructure.services.viaCep;
+package com.gazaltech.meta.infrastructure.services.getCep;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.gazaltech.meta.infrastructure.services.getCep.port.GetCepPort;
+
 @FeignClient(name = "via-cep-client", url = "https://viacep.com.br/ws")
 @Validated
-public interface ViaCepClient {
+public interface ViaCepClient extends GetCepPort<ViaCepResponse> {
 
     @GetMapping("/{cep}/json")
     ViaCepResponse getAddressByZipCode(@PathVariable @Length(min = 8, max = 8, message = "Zip Code must be 8 characters") String cep);

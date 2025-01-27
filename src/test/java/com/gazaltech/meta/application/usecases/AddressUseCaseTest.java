@@ -29,8 +29,8 @@ import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.domain.Uf;
 import com.gazaltech.meta.infrastructure.models.AddressModel;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
-import com.gazaltech.meta.infrastructure.services.viaCep.ViaCepClient;
-import com.gazaltech.meta.infrastructure.services.viaCep.ViaCepResponse;
+import com.gazaltech.meta.infrastructure.services.getCep.ViaCepClient;
+import com.gazaltech.meta.infrastructure.services.getCep.ViaCepResponse;
 
 @ExtendWith(MockitoExtension.class)
 public class AddressUseCaseTest {
