@@ -51,17 +51,16 @@ public class ClientUseCase implements ClientPort {
 
     @Override
     public void updateClient(Long id, UpdateClientDTO clientDTO) {
-        clientRepository.findById(id)
-                .map(clientModel -> clientMapper.modelToDomain(clientModel))
-                .map(client -> {
-                    clientMapper.updateDomainFromDto(clientDTO, client);
-                    return client;
-                })
-                .map(client -> clientMapper.domainToModel(client))
-                .map(clientModel -> {
-                    return clientRepository.save(clientModel);
-                })
-                .orElseThrow(() -> new NotFoundException("Client not found"));
+        var optionalClientModel = clientRepository.findById(id);
+
+        if (!optionalClientModel.isPresent()) {
+            throw new NotFoundException("Client not found");
+        }
+
+        var client = clientMapper.modelToDomain(optionalClientModel.get());
+        clientMapper.updateDomainFromDto(clientDTO, client);
+        var clientModel = clientMapper.domainToModel(client);
+        clientRepository.save(clientModel);
     }
 
     @Override
