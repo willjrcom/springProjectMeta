@@ -17,13 +17,19 @@ public interface AddressMapper {
     AddressDTO domainToDto(Address address);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "uf", expression = "java(Uf.valueOf(dto.getUf()))")
     Address createDtoToDomain(CreateAddressDTO address);
 
     @Mapping(target = "id", ignore = true)
     void updateDomainFromDto(UpdateAddressDTO dto, @MappingTarget Address address);
     
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "number", ignore = true)
+    @Mapping(target = "complement", ignore = true)
+    @Mapping(target = "reference", ignore = true)
+    @Mapping(target = "street", source = "logradouro")
+    @Mapping(target = "neighborhood", source = "bairro")
+    @Mapping(target = "city", source = "localidade")
+    @Mapping(target = "zipCode", source = "cep")
     void updateDomainFromViaCepResponse(ViaCepResponse response, @MappingTarget Address address);
 
     // Model mapper
