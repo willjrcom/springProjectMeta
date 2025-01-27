@@ -8,5 +8,9 @@ public interface GetAddressPort {
 
     AddressDTO getAddressByID(Long id);
 
+    List<AddressDTO> getAddressesByZipCode(String zipCode);
+
+    AddressDTO searchZipCode(String zipCode);
+
     List<AddressDTO> getAllAddresses(int page, int size);
 }

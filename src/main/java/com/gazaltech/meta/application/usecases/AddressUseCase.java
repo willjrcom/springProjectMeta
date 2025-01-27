@@ -15,6 +15,7 @@ import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.application.mappers.AddressListMapper;
 import com.gazaltech.meta.application.mappers.AddressMapper;
 import com.gazaltech.meta.application.ports.address.AddressPort;
+import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
 import com.gazaltech.meta.infrastructure.services.getCep.ViaCepClient;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
@@ -92,5 +93,23 @@ public class AddressUseCase implements AddressPort {
 
         var addresses = addressListMapper.modelsToDomains(addressModels);
         return addressListMapper.domainsToDtos(addresses);
+    }
+
+    @Override
+    public List<AddressDTO> getAddressesByZipCode(String zipCode) {
+        var addressModels = addressRepository.findByZipCode(zipCode);
+        var addresses = addressListMapper.modelsToDomains(addressModels);
+        return addressListMapper.domainsToDtos(addresses);
+    }
+
+    @Override
+    public AddressDTO searchZipCode(String zipCode) {
+        var cepWithoutDash = zipCode.replace("-", "");
+        var viaCepResponse = viaCepClient.getAddressByZipCode(cepWithoutDash);
+
+        var address = new Address();
+        addressMapper.updateDomainFromViaCepResponse(viaCepResponse, address);
+        var addressDTO = addressMapper.domainToDto(address);
+        return addressDTO;
     }
 }

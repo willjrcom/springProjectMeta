@@ -49,6 +49,22 @@ public class AddressController {
         return ResponseEntity.ok(addressDTO);
     }
 
+    @GetMapping("/zip-code/{zipCode}")
+    public ResponseEntity<List<AddressDTO>> getAddressesByZipCode(@PathVariable String zipCode) {
+        logger.info("Address found: {}", zipCode);
+
+        var addressDTO = addressUseCase.getAddressesByZipCode(zipCode);
+        return ResponseEntity.ok(addressDTO);
+    }
+
+    @GetMapping("/search-zip-code/{zipCode}")
+    public ResponseEntity<AddressDTO> searchCep(@PathVariable String zipCode) {
+        logger.info("Address found: {}", zipCode);
+
+        var addressDTO = addressUseCase.searchZipCode(zipCode);
+        return ResponseEntity.ok(addressDTO);
+    }
+
     @GetMapping
     public ResponseEntity<List<AddressDTO>> getAllAddresses(@RequestParam int page, @RequestParam int size) {
         logger.info("Addresses found");
