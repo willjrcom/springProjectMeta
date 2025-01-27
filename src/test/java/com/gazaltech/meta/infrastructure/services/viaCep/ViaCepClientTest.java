@@ -3,6 +3,7 @@ package com.gazaltech.meta.infrastructure.services.viaCep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ public class ViaCepClientTest {
     private ViaCepClient viaCepClient;
 
     @Test
+    @DisplayName("Get address by zip code")
     void testGetAddressByZipCode_WithoutDash_Success() {
         var cep = "01001-000";
         var cepWithoutDash = cep.replace("-", "");
@@ -24,6 +26,7 @@ public class ViaCepClientTest {
     }
 
     @Test
+    @DisplayName("Get address by zip code with dash")
     void testGetAddressByZipCode_WithDash_Error() {
         var cep = "01001-000";
         assertThrows(ConstraintViolationException.class, () -> viaCepClient.getAddressByZipCode(cep));

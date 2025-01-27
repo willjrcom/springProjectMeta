@@ -3,6 +3,7 @@ package com.gazaltech.meta.application.mappers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,6 +58,7 @@ public class AddressMapperTest {
     private AddressMapperImpl addressMapper;
 
     @Test
+    @DisplayName("Create to Domain test")
     void testCreateDtoToDomain() {
         var domain = addressMapper.createDtoToDomain(createAddressDTO);
 
@@ -70,6 +72,7 @@ public class AddressMapperTest {
     }
 
     @Test
+    @DisplayName("Domain to DTO test")
     void testDomainToDto() {
         var dto = addressMapper.domainToDto(address);
 
@@ -83,6 +86,7 @@ public class AddressMapperTest {
     }
 
     @Test
+    @DisplayName("Domain to Model test")
     void testDomainToModel() {
         var model = addressMapper.domainToModel(address);
 
@@ -96,6 +100,7 @@ public class AddressMapperTest {
     }
 
     @Test
+    @DisplayName("Model to Domain test")
     void testModelToDomain() {
         var domain = addressMapper.modelToDomain(addressModel);
 
@@ -109,6 +114,7 @@ public class AddressMapperTest {
     }
 
     @Test
+    @DisplayName("Update Domain from DTO test")
     void testUpdateDomainFromDto() {
         addressMapper.updateDomainFromDto(updateAddressDTO, address);
 
@@ -123,6 +129,7 @@ public class AddressMapperTest {
     }
 
     @Test
+    @DisplayName("Update Domain from Via Cep Response test")
     void updateDomainFromViaCepResponse() {
         addressMapper.updateDomainFromDto(updateAddressDTO, address);
 

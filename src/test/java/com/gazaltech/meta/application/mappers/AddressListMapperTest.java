@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,6 +42,7 @@ public class AddressListMapperTest {
     private AddressListMapperImpl addressListMapper;
 
     @Test
+    @DisplayName("Domains to Dtos")
     void testDomainsToDtos() {
         var dtos = addressListMapper.domainsToDtos(addresses);
 
@@ -58,6 +60,7 @@ public class AddressListMapperTest {
     }
 
     @Test
+    @DisplayName("Models to Domains")
     void testModelsToDomains() {
         var domains = addressListMapper.modelsToDomains(addressModels);
 

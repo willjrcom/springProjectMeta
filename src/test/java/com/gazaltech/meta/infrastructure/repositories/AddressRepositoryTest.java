@@ -2,6 +2,7 @@ package com.gazaltech.meta.infrastructure.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,6 +25,7 @@ public class AddressRepositoryTest {
     .build();
 
     @Test
+    @DisplayName("Save all fields")
     public void testSave_AllFields_Success() {
         AddressModel result = addressRepository.save(addressModel);
         assertThat(result).isNotNull();
@@ -37,6 +39,7 @@ public class AddressRepositoryTest {
     }
 
     @Test
+    @DisplayName("Find by ID")
     public void testFindById_ValidID_Success() {
         addressRepository.save(addressModel);
         AddressModel result = addressRepository.findById(addressModel.getId()).orElse(null);
@@ -46,12 +49,14 @@ public class AddressRepositoryTest {
     }
 
     @Test
+    @DisplayName("Find by ID - Invalid ID")
     public void testFindById_InvalidID_Error() {
         AddressModel result = addressRepository.findById(999L).orElse(null);
         assertThat(result).isNull();
     }
 
     @Test
+    @DisplayName("Delete by ID")
     public void testDelete_ValidID_Success() {
         addressRepository.save(addressModel);
         addressRepository.deleteById(addressModel.getId());
@@ -60,6 +65,7 @@ public class AddressRepositoryTest {
     }
 
     @Test
+    @DisplayName("Delete by ID - Invalid ID")
     public void testDelete_InvalidID_Error() {
         addressRepository.deleteById(999L);
         AddressModel result = addressRepository.findById(999L).orElse(null);
@@ -67,7 +73,8 @@ public class AddressRepositoryTest {
     }
 
     @Test
-    public void testUpdate() {
+    @DisplayName("Update")
+    public void testUpdate_NewNumber_Success() {
         addressModel.setNumber(228);
         addressRepository.save(addressModel);
 

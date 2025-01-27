@@ -3,6 +3,7 @@ package com.gazaltech.meta.application.mappers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,6 +45,7 @@ public class ClientMapperTest {
     private ClientMapperImpl clientMapper;
 
     @Test
+    @DisplayName("Create to Domain test")
     void testCreateDtoToDomain() {
         var domain = clientMapper.createDtoToDomain(createClientDTO);
 
@@ -54,6 +56,7 @@ public class ClientMapperTest {
     }
 
     @Test
+    @DisplayName("Domain to DTO test")
     void testDomainToDto() {
         var dto = clientMapper.domainToDto(client);
 
@@ -64,6 +67,7 @@ public class ClientMapperTest {
     }
 
     @Test
+    @DisplayName("Domain to Model test")
     void testDomainToModel() {
         var model = clientMapper.domainToModel(client);
 
@@ -74,6 +78,7 @@ public class ClientMapperTest {
     }
 
     @Test
+    @DisplayName("Model to Domain test")
     void testModelToDomain() {
         var domain = clientMapper.modelToDomain(clientModel);
 
@@ -84,6 +89,7 @@ public class ClientMapperTest {
     }
 
     @Test
+    @DisplayName("Update Domain from DTO test")
     void testUpdateDomainFromDto() {
         clientMapper.updateDomainFromDto(updateClientDTO, client);
 
