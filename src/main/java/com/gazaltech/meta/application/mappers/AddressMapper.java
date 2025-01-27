@@ -16,7 +16,8 @@ public interface AddressMapper {
     AddressDTO domainToDto(Address address);
 
     @Mapping(target = "id", ignore = true)
-    Address createDtoToDomain(CreateAddressDTO client);
+    @Mapping(target = "uf", expression = "java(Uf.valueOf(dto.getUf()))")
+    Address createDtoToDomain(CreateAddressDTO address);
 
     @Mapping(target = "id", ignore = true)
     void updateDomainFromDto(UpdateAddressDTO dto, @MappingTarget Address address);
