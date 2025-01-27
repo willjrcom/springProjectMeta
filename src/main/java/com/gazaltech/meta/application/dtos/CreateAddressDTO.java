@@ -15,7 +15,7 @@ import lombok.Data;
 public class CreateAddressDTO {
 
     @JsonProperty("street")
-    @NotNull
+    @NotNull(message = "Street is required")
     private String street;
 
     @JsonProperty("number")
@@ -29,20 +29,19 @@ public class CreateAddressDTO {
     private String reference;
 
     @JsonProperty("neighborhood")
-    @NotNull
+    @NotNull(message = "Neighborhood is required")
     private String neighborhood;
 
     @JsonProperty("city")
-    @NotNull
+    @NotNull(message = "City is required")
     private String city;
 
     @JsonProperty("uf")
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "UF is required")
     private String uf;
 
     @JsonProperty("zip_code")
     @Pattern(regexp = "^[0-9]{5}-[0-9]{3}$")
-    @NotNull
     private String zipCode;
 }

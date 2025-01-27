@@ -14,7 +14,7 @@ import lombok.Data;
 public class CreateClientDTO {
     
     @JsonProperty("name")
-    @NotNull
+    @NotNull(message = "Name is required")
     private String name;
 
     @JsonProperty("email")
@@ -23,6 +23,6 @@ public class CreateClientDTO {
 
     @JsonProperty("cpf")
     @CPF
-    @NotNull
+    @NotNull(message = "Cpf is required")
     private String cpf;
 }
