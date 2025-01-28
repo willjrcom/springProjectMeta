@@ -8,21 +8,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.gazaltech.meta.infrastructure.services.getCep.ViaCepClient;
+import com.gazaltech.meta.infrastructure.services.getCep.GetCepService;
 
 import jakarta.validation.ConstraintViolationException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ViaCepClientTest {
     @Autowired
-    private ViaCepClient viaCepClient;
+    private GetCepService getCepService;
 
     @Test
     @DisplayName("Get address by zip code")
     void testGetAddressByZipCode_WithoutDash_Success() {
         var cep = "01001-000";
         var cepWithoutDash = cep.replace("-", "");
-        var response = viaCepClient.getAddressByZipCode(cepWithoutDash);
+        var response = getCepService.getAddressByZipCode(cepWithoutDash);
 
         assertEquals(response.getCep(), cep);
     }
@@ -31,6 +31,6 @@ public class ViaCepClientTest {
     @DisplayName("Get address by zip code with dash")
     void testGetAddressByZipCode_WithDash_Error() {
         var cep = "01001-000";
-        assertThrows(ConstraintViolationException.class, () -> viaCepClient.getAddressByZipCode(cep));
+        assertThrows(ConstraintViolationException.class, () -> getCepService.getAddressByZipCode(cep));
     }
 }

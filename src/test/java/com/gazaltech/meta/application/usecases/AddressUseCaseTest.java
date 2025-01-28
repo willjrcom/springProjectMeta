@@ -24,7 +24,7 @@ import com.gazaltech.meta.application.mappers.AddressListMapper;
 import com.gazaltech.meta.application.mappers.AddressMapper;
 import com.gazaltech.meta.factories.AddressFactory;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
-import com.gazaltech.meta.infrastructure.services.getCep.ViaCepClient;
+import com.gazaltech.meta.infrastructure.services.getCep.GetCepService;
 
 @ExtendWith(MockitoExtension.class)
 public class AddressUseCaseTest {
@@ -32,7 +32,7 @@ public class AddressUseCaseTest {
         private AddressRepository addressRepository;
 
         @Mock
-        private ViaCepClient viaCepClient;
+        private GetCepService getCepService;
 
         @Mock
         private AddressMapper addressMapper;
@@ -47,7 +47,7 @@ public class AddressUseCaseTest {
         @DisplayName("Create Address test")
         void testCreateAddress_AllFields_Success() {
                 var cep = AddressFactory.createAddressDTO.getZipCode().replace("-", "");
-                when(viaCepClient.getAddressByZipCode(cep)).thenReturn(AddressFactory.viaCepResponse);
+                when(getCepService.getAddressByZipCode(cep)).thenReturn(AddressFactory.viaCepResponse);
 
                 when(addressMapper.createDtoToDomain(AddressFactory.createAddressDTO)).thenReturn(AddressFactory.address);
                 when(addressMapper.domainToModel(AddressFactory.address)).thenReturn(AddressFactory.addressModel);
@@ -104,7 +104,7 @@ public class AddressUseCaseTest {
         void testUpdateAddress_NewAddress_Success() {
                 when(addressRepository.findById(AddressFactory.addressModel.getId())).thenReturn(Optional.of(AddressFactory.addressModel));
                 var cep = AddressFactory.createAddressDTO.getZipCode().replace("-", "");
-                when(viaCepClient.getAddressByZipCode(cep)).thenReturn(AddressFactory.viaCepResponse);
+                when(getCepService.getAddressByZipCode(cep)).thenReturn(AddressFactory.viaCepResponse);
 
                 when(addressMapper.domainToModel(AddressFactory.address)).thenReturn(AddressFactory.addressModel);
                 when(addressMapper.modelToDomain(AddressFactory.addressModel)).thenReturn(AddressFactory.address);

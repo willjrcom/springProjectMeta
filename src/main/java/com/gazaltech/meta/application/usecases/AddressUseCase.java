@@ -17,7 +17,7 @@ import com.gazaltech.meta.application.mappers.AddressMapper;
 import com.gazaltech.meta.application.ports.address.AddressPort;
 import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
-import com.gazaltech.meta.infrastructure.services.getCep.ViaCepClient;
+import com.gazaltech.meta.infrastructure.services.getCep.port.GetCepPort;
 import com.gazaltech.meta.shared.exceptions.NotFoundException;
 
 @Service
@@ -27,7 +27,7 @@ public class AddressUseCase implements AddressPort {
     private AddressRepository addressRepository;
 
     @Autowired
-    private ViaCepClient viaCepClient;
+    private GetCepPort getCepService;
 
     @Autowired
     private AddressMapper addressMapper;
@@ -40,7 +40,7 @@ public class AddressUseCase implements AddressPort {
         var address = addressMapper.createDtoToDomain(addressDTO);
 
         var cep = address.getZipCode().replace("-", "");
-        var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
+        var viaCepResponse = getCepService.getAddressByZipCode(cep);
         addressMapper.updateDomainFromViaCepResponse(viaCepResponse, address);
 
         var addressModel = addressMapper.domainToModel(address);
@@ -61,7 +61,7 @@ public class AddressUseCase implements AddressPort {
         addressMapper.updateDomainFromDto(addressDTO, address);
 
         var cep = address.getZipCode().replace("-", "");
-        var viaCepResponse = viaCepClient.getAddressByZipCode(cep);
+        var viaCepResponse = getCepService.getAddressByZipCode(cep);
 
         addressMapper.updateDomainFromViaCepResponse(viaCepResponse, address);
         var addressModel = addressMapper.domainToModel(address);
@@ -105,7 +105,7 @@ public class AddressUseCase implements AddressPort {
     @Override
     public AddressDTO searchZipCode(String zipCode) {
         var cepWithoutDash = zipCode.replace("-", "");
-        var viaCepResponse = viaCepClient.getAddressByZipCode(cepWithoutDash);
+        var viaCepResponse = getCepService.getAddressByZipCode(cepWithoutDash);
 
         var address = new Address();
         addressMapper.updateDomainFromViaCepResponse(viaCepResponse, address);
