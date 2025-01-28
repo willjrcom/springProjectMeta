@@ -16,8 +16,8 @@ import com.gazaltech.meta.infrastructure.models.AddressModel;
 @SpringBootTest()
 public class AddressListMapperTest {
 
-    private final List<AddressModel> addressModels = List.of(AddressFactory.addressModel, AddressFactory.addressModel);
-    private final List<Address> addresses = List.of(AddressFactory.address, AddressFactory.address);
+    private final List<AddressModel> addressModels = List.of(AddressFactory.addressModel(), AddressFactory.addressModel());
+    private final List<Address> addresses = List.of(AddressFactory.address(), AddressFactory.address());
 
     @Autowired
     private AddressListMapperImpl addressListMapper;

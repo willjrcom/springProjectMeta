@@ -16,8 +16,8 @@ import com.gazaltech.meta.infrastructure.models.ClientModel;
 @SpringBootTest()
 public class ClientListMapperTest {
 
-    private final List<ClientModel> clientModels = List.of(ClientFactory.clientModel, ClientFactory.clientModel);
-    private final List<Client> clients = List.of(ClientFactory.client, ClientFactory.client);
+    private final List<ClientModel> clientModels = List.of(ClientFactory.clientModel(), ClientFactory.clientModel());
+    private final List<Client> clients = List.of(ClientFactory.client(), ClientFactory.client());
 
     @Autowired
     private ClientListMapperImpl clientListMapper;

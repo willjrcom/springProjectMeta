@@ -51,55 +51,70 @@ public class ClientUseCaseTest {
     @Test
     @DisplayName("Add Address test")
     void testAddAddress_ValidAddressID_Success() {
-        when(clientRepository.findById(ClientFactory.clientModel.getId())).thenReturn(Optional.of(ClientFactory.clientModel));
-        when(clientRepository.save(ClientFactory.clientModel)).thenReturn(ClientFactory.clientModelWithAddress);
-        when(addressRepository.findById(1L)).thenReturn(Optional.of(AddressFactory.addressModel));
+        var clientModel = ClientFactory.clientModel();
+        var client = ClientFactory.client();
+        var clientModelWithAddress = ClientFactory.clientModelWithAddress();
+        var addressModel = AddressFactory.addressModel();
+        var address = AddressFactory.address();
 
-        when(clientMapper.domainToModel(ClientFactory.client)).thenReturn(ClientFactory.clientModel);
-        when(clientMapper.modelToDomain(ClientFactory.clientModel)).thenReturn(ClientFactory.client);
+        when(clientRepository.findById(clientModel.getId())).thenReturn(Optional.of(clientModel));
+        when(clientRepository.save(clientModel)).thenReturn(clientModelWithAddress);
+        when(addressRepository.findById(1L)).thenReturn(Optional.of(addressModel));
 
-        when(addressMapper.modelToDomain(AddressFactory.addressModel)).thenReturn(AddressFactory.address);
+        when(clientMapper.domainToModel(client)).thenReturn(clientModel);
+        when(clientMapper.modelToDomain(clientModel)).thenReturn(client);
 
-        clientUseCase.addAddress(ClientFactory.clientModel.getId(), AddressFactory.addressModel.getId());
+        when(addressMapper.modelToDomain(addressModel)).thenReturn(address);
 
-        assertThat(ClientFactory.clientModelWithAddress.getAddress()).isNotNull();
+        clientUseCase.addAddress(clientModel.getId(), addressModel.getId());
+
+        assertThat(clientModelWithAddress.getAddress()).isNotNull();
     }
 
     @Test
     @DisplayName("Create Client test")
     void testCreateClient_AllFields_Success() {
-        when(clientMapper.createDtoToDomain(ClientFactory.createClientDTO)).thenReturn(ClientFactory.client);
-        when(clientMapper.domainToModel(ClientFactory.client)).thenReturn(ClientFactory.clientModel);
-        when(clientMapper.modelToDomain(ClientFactory.clientModel)).thenReturn(ClientFactory.client);
+        var clientModel = ClientFactory.clientModel();
+        var client = ClientFactory.client();
+        var createClientDTO = ClientFactory.createClientDTO();
 
-        var id = clientUseCase.createClient(ClientFactory.createClientDTO);
+        when(clientMapper.createDtoToDomain(createClientDTO)).thenReturn(client);
+        when(clientMapper.domainToModel(client)).thenReturn(clientModel);
+        when(clientMapper.modelToDomain(clientModel)).thenReturn(client);
 
-        assertEquals(ClientFactory.client.getId().toString(), id);
-        assertEquals(ClientFactory.client.getName(), ClientFactory.createClientDTO.getName());
-        assertEquals(ClientFactory.client.getEmail(), ClientFactory.createClientDTO.getEmail());
-        assertEquals(ClientFactory.client.getCpf(), ClientFactory.createClientDTO.getCpf());
+        var id = clientUseCase.createClient(createClientDTO);
+
+        assertEquals(client.getId().toString(), id);
+        assertEquals(client.getName(), createClientDTO.getName());
+        assertEquals(client.getEmail(), createClientDTO.getEmail());
+        assertEquals(client.getCpf(), createClientDTO.getCpf());
     }
 
     @Test
     @DisplayName("Delete Client test")
     void testDeleteClientByID_ValidID_Success() {
-        when(clientRepository.existsById(ClientFactory.clientModel.getId())).thenReturn(true);
+        var clientModel = ClientFactory.clientModel();
+        when(clientRepository.existsById(clientModel.getId())).thenReturn(true);
 
-        clientUseCase.deleteClientByID(ClientFactory.clientModel.getId());
+        clientUseCase.deleteClientByID(clientModel.getId());
 
-        verify(clientRepository, times(1)).deleteById(ClientFactory.clientModel.getId());
-        verify(clientRepository, times(1)).existsById(ClientFactory.clientModel.getId());
+        verify(clientRepository, times(1)).deleteById(clientModel.getId());
+        verify(clientRepository, times(1)).existsById(clientModel.getId());
     }
 
     @Test
     @DisplayName("Get All Clients test")
     void testGetAllClients_Success() {
+        var clientModel = ClientFactory.clientModel();
+        var client = ClientFactory.client();
+        var clientDTO = ClientFactory.clientDTO();
+
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
 
-        when(clientRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(ClientFactory.clientModel, ClientFactory.clientModel)));
+        when(clientRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(clientModel, clientModel)));
 
-        when(clientListMapper.modelsToDomains(List.of(ClientFactory.clientModel, ClientFactory.clientModel))).thenReturn(List.of(ClientFactory.client, ClientFactory.client));
-        when(clientListMapper.domainsToDtos(List.of(ClientFactory.client, ClientFactory.client))).thenReturn(List.of(ClientFactory.clientDTO, ClientFactory.clientDTO));
+        when(clientListMapper.modelsToDomains(List.of(clientModel, clientModel))).thenReturn(List.of(client, client));
+        when(clientListMapper.domainsToDtos(List.of(client, client))).thenReturn(List.of(clientDTO, clientDTO));
 
         var clients = clientUseCase.getAllClients(0, 10);
 
@@ -109,46 +124,58 @@ public class ClientUseCaseTest {
     @Test
     @DisplayName("Get Client by ID test")
     void testGetClientByID_ValidID_Success() {
-        when(clientRepository.findById(ClientFactory.clientModel.getId())).thenReturn(Optional.of(ClientFactory.clientModel));
+        var clientModel = ClientFactory.clientModel();
+        var client = ClientFactory.client();
+        var clientDTO = ClientFactory.clientDTO();
 
-        when(clientMapper.domainToDto(ClientFactory.client)).thenReturn(ClientFactory.clientDTO);
-        when(clientMapper.modelToDomain(ClientFactory.clientModel)).thenReturn(ClientFactory.client);
+        when(clientRepository.findById(clientModel.getId())).thenReturn(Optional.of(clientModel));
 
-        var clientFound = clientUseCase.getClientByID(ClientFactory.clientModel.getId());
+        when(clientMapper.domainToDto(client)).thenReturn(clientDTO);
+        when(clientMapper.modelToDomain(clientModel)).thenReturn(client);
 
-        assertEquals(clientFound.getId(), ClientFactory.clientModel.getId());
+        var clientFound = clientUseCase.getClientByID(clientModel.getId());
+
+        assertEquals(clientFound.getId(), clientModel.getId());
     }
 
     @Test
     @DisplayName("Remove Address test")
     void testRemoveAddress_ValidID_Success() {
-        when(clientRepository.findById(ClientFactory.clientModel.getId())).thenReturn(Optional.of(ClientFactory.clientModel));
-        when(clientRepository.save(ClientFactory.clientModel)).thenReturn(ClientFactory.clientModelWithAddress);
+        var clientModel = ClientFactory.clientModel();
+        var clientModelWithAddress = ClientFactory.clientModelWithAddress();
+        var client = ClientFactory.client();
 
-        when(clientMapper.domainToModel(ClientFactory.client)).thenReturn(ClientFactory.clientModel);
-        when(clientMapper.modelToDomain(ClientFactory.clientModel)).thenReturn(ClientFactory.client);
+        when(clientRepository.findById(clientModel.getId())).thenReturn(Optional.of(clientModel));
+        when(clientRepository.save(clientModel)).thenReturn(clientModelWithAddress);
 
-        clientUseCase.removeAddress(ClientFactory.clientModel.getId());
+        when(clientMapper.domainToModel(client)).thenReturn(clientModel);
+        when(clientMapper.modelToDomain(clientModel)).thenReturn(client);
 
-        verify(clientRepository, times(1)).save(ClientFactory.clientModel);
+        clientUseCase.removeAddress(clientModel.getId());
 
-        assertThat(ClientFactory.clientModel.getAddress()).isNull();
+        verify(clientRepository, times(1)).save(clientModel);
+
+        assertThat(clientModel.getAddress()).isNull();
     }
 
     @Test
     @DisplayName("Update Client test")
     void testUpdateClient_NewClient_Success() {
-        when(clientRepository.findById(ClientFactory.clientModel.getId())).thenReturn(Optional.of(ClientFactory.clientModel));
-        when(clientMapper.modelToDomain(ClientFactory.clientModel)).thenReturn(ClientFactory.client);
-        when(clientMapper.domainToModel(ClientFactory.client)).thenReturn(ClientFactory.clientModel);
+        var clientModel = ClientFactory.clientModel();
+        var client = ClientFactory.client();
+        var updateClientDTO = ClientFactory.updateClientDTO();
 
-        clientUseCase.updateClient(ClientFactory.clientModel.getId(), ClientFactory.updateClientDTO);
+        when(clientRepository.findById(clientModel.getId())).thenReturn(Optional.of(clientModel));
+        when(clientMapper.modelToDomain(clientModel)).thenReturn(client);
+        when(clientMapper.domainToModel(client)).thenReturn(clientModel);
 
-        verify(clientRepository, times(1)).save(ClientFactory.clientModel);
+        clientUseCase.updateClient(clientModel.getId(), updateClientDTO);
 
-        assertEquals(ClientFactory.clientModel.getId(), ClientFactory.clientModel.getId());
-        assertEquals(ClientFactory.clientModel.getName(), ClientFactory.updateClientDTO.getName());
-        assertEquals(ClientFactory.clientModel.getEmail(), ClientFactory.updateClientDTO.getEmail());
-        assertEquals(ClientFactory.clientModel.getCpf(), ClientFactory.updateClientDTO.getCpf());
+        verify(clientRepository, times(1)).save(clientModel);
+
+        assertEquals(clientModel.getId(), clientModel.getId());
+        assertEquals(clientModel.getName(), updateClientDTO.getName());
+        assertEquals(clientModel.getEmail(), updateClientDTO.getEmail());
+        assertEquals(clientModel.getCpf(), updateClientDTO.getCpf());
     }
 }

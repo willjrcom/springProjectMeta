@@ -7,7 +7,6 @@ import com.gazaltech.meta.infrastructure.repositories.AddressRepository;
 import com.gazaltech.meta.infrastructure.repositories.ClientRepository;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -36,12 +35,6 @@ public class ClientIntegrationTest {
         @Autowired
         private AddressRepository addressRepository;
 
-        @BeforeEach
-        void up() {
-                clientRepository.save(ClientFactory.clientModel);
-                addressRepository.save(AddressFactory.addressModel);
-        }
-
         @AfterEach
         void down() {
                 clientRepository.deleteAll();
@@ -49,7 +42,7 @@ public class ClientIntegrationTest {
 
         @Test
         void createClient_AllFields_Success() throws Exception {
-                String json = objectMapper.writeValueAsString(ClientFactory.createClientDTO);
+                String json = objectMapper.writeValueAsString(ClientFactory.createClientDTO());
 
                 mockMvc.perform(MockMvcRequestBuilders.post("/clients")
                                 .contentType("application/json")
@@ -62,8 +55,9 @@ public class ClientIntegrationTest {
 
         @Test
         void createClient_WithoutName_Error() throws Exception {
-                ClientFactory.createClientDTO.setName(null);
-                String json = objectMapper.writeValueAsString(ClientFactory.createClientDTO);
+                var clientDTO = ClientFactory.createClientDTO();
+                clientDTO.setName(null);
+                String json = objectMapper.writeValueAsString(clientDTO);
 
                 mockMvc.perform(MockMvcRequestBuilders.post("/clients")
                                 .contentType("application/json")
@@ -76,9 +70,11 @@ public class ClientIntegrationTest {
 
         @Test
         void updateClient_AllFields_Success() throws Exception {
-                String json = objectMapper.writeValueAsString(ClientFactory.updateClientDTO);
+                var clientModel = ClientFactory.clientModelWithoutID();
+                clientRepository.save(clientModel);
+                String json = objectMapper.writeValueAsString(clientModel);
 
-                mockMvc.perform(MockMvcRequestBuilders.put("/clients/" + ClientFactory.clientModel.getId().toString())
+                mockMvc.perform(MockMvcRequestBuilders.put("/clients/" + clientModel.getId().toString())
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json")
@@ -89,7 +85,7 @@ public class ClientIntegrationTest {
 
         @Test
         void updateClient_InvalidID_Error() throws Exception {
-                String json = objectMapper.writeValueAsString(ClientFactory.updateClientDTO);
+                String json = objectMapper.writeValueAsString(ClientFactory.updateClientDTO());
 
                 mockMvc.perform(MockMvcRequestBuilders.put("/clients/invalidID")
                                 .contentType("application/json")
@@ -102,7 +98,7 @@ public class ClientIntegrationTest {
 
         @Test
         void updateClient_NotFoundID_Error() throws Exception {
-                String json = objectMapper.writeValueAsString(ClientFactory.updateClientDTO);
+                String json = objectMapper.writeValueAsString(ClientFactory.updateClientDTO());
 
                 mockMvc.perform(MockMvcRequestBuilders.put("/clients/999")
                                 .contentType("application/json")
@@ -115,7 +111,10 @@ public class ClientIntegrationTest {
 
         @Test
         void getClientByID_ValidID_Success() throws Exception {
-                mockMvc.perform(MockMvcRequestBuilders.get("/clients/" + ClientFactory.clientModel.getId().toString())
+                var clientModel = ClientFactory.clientModelWithoutID();
+                clientRepository.save(clientModel);
+
+                mockMvc.perform(MockMvcRequestBuilders.get("/clients/" + clientModel.getId().toString())
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json"))
@@ -145,7 +144,10 @@ public class ClientIntegrationTest {
 
         @Test
         void deleteClientByID_ValidID_Success() throws Exception {
-                mockMvc.perform(MockMvcRequestBuilders.delete("/clients/" + ClientFactory.clientModel.getId().toString())
+                var clientModel = ClientFactory.clientModelWithoutID();
+                clientRepository.save(clientModel);
+
+                mockMvc.perform(MockMvcRequestBuilders.delete("/clients/" + clientModel.getId().toString())
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json"))
@@ -175,9 +177,15 @@ public class ClientIntegrationTest {
 
         @Test
         void addAddressToClient_ValidIDs_Success() throws Exception {
+                var clientModel = ClientFactory.clientModelWithoutID();
+                clientRepository.save(clientModel);
+
+                var addressModel = AddressFactory.addressModelWithoutID();
+                addressRepository.save(addressModel);
+
                 mockMvc.perform(MockMvcRequestBuilders
-                                .post("/clients/" + ClientFactory.clientModel.getId().toString() + "/address/"
-                                                + AddressFactory.addressModel.getId().toString())
+                                .post("/clients/" + clientModel.getId().toString() + "/address/"
+                                                + addressModel.getId().toString())
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json"))
@@ -209,11 +217,17 @@ public class ClientIntegrationTest {
 
         @Test
         void removeAddressFromClient_ValidID_Success() throws Exception {
-                ClientFactory.clientModel.setAddress(AddressFactory.addressModel);
-                clientRepository.save(ClientFactory.clientModel);
+                var clientModel = ClientFactory.clientModelWithoutID();
+                clientRepository.save(clientModel);
+
+                var addressModel = AddressFactory.addressModelWithoutID();
+                addressRepository.save(addressModel);
+
+                clientModel.setAddress(addressModel);
+                clientRepository.save(clientModel);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/clients/" + ClientFactory.clientModel.getId().toString() + "/address")
+                                .delete("/clients/" + clientModel.getId().toString() + "/address")
                                 .contentType("application/json")
                                 .characterEncoding("UTF-8")
                                 .accept("application/json"))
@@ -223,9 +237,6 @@ public class ClientIntegrationTest {
 
         @Test
         void removeAddressFromClient_InvalidID_Error() throws Exception {
-                ClientFactory.clientModel.setAddress(AddressFactory.addressModel);
-                clientRepository.save(ClientFactory.clientModel);
-
                 mockMvc.perform(MockMvcRequestBuilders
                                 .delete("/clients/invalidID/address")
                                 .contentType("application/json")
@@ -237,9 +248,6 @@ public class ClientIntegrationTest {
 
         @Test
         void removeAddressFromClient_NotFoundID_Error() throws Exception {
-                ClientFactory.clientModel.setAddress(AddressFactory.addressModel);
-                clientRepository.save(ClientFactory.clientModel);
-
                 mockMvc.perform(MockMvcRequestBuilders
                                 .delete("/clients/999/address")
                                 .contentType("application/json")

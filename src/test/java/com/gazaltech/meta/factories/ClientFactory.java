@@ -8,44 +8,64 @@ import com.gazaltech.meta.infrastructure.models.ClientModel;
 
 public class ClientFactory {
 
-        public static CreateClientDTO createClientDTO = CreateClientDTO.builder()
+        public static CreateClientDTO createClientDTO () {
+                return CreateClientDTO.builder()
                         .name("William")
                         .email("will@gmail.com")
                         .cpf("436.377.998-55")
                         .build();
+        }
 
-        public static UpdateClientDTO updateClientDTO = UpdateClientDTO.builder()
+        public static UpdateClientDTO updateClientDTO () {
+                return UpdateClientDTO.builder()
                         .name("William")
                         .email("will@gmail.com")
                         .cpf("436.377.998-55")
                         .build();
+        }
 
-        public static ClientDTO clientDTO = ClientDTO.builder()
+        public static ClientDTO clientDTO () {
+                return ClientDTO.builder()
                         .id(1L)
                         .name("William")
                         .email("will@gmail.com")
                         .cpf("436.377.998-55")
                         .build();
+        }
 
-        public static Client client = Client.builder()
+        public static Client client() {
+                return Client.builder()
                         .id(1L)
                         .name("William")
                         .email("will@gmail.com")
                         .cpf("436.377.998-55")
                         .build();
+        }
 
-        public static ClientModel clientModel = ClientModel.builder()
+        public static ClientModel clientModel () {
+                return ClientModel.builder()
                         .id(1L)
                         .name("William")
                         .email("will@gmail.com")
                         .cpf("436.377.998-55")
                         .build();
+        }
 
-        public static ClientModel clientModelWithAddress = ClientModel.builder()
+        public static ClientModel clientModelWithoutID () {
+                return ClientModel.builder()
+                        .name("William")
+                        .email("will@gmail.com")
+                        .cpf("436.377.998-55")
+                        .build();
+        }
+
+        public static ClientModel clientModelWithAddress () {
+                return ClientModel.builder()
                         .id(1L)
                         .name("William")
                         .email("will@gmail.com")
                         .cpf("436.377.998-55")
-                        .address(AddressFactory.addressModel)
+                        .address(AddressFactory.addressModel())
                         .build();
+        }
 }
