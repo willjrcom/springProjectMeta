@@ -1,4 +1,4 @@
-package com.gazaltech.meta.infrastructure.services.getCep;
+package com.gazaltech.meta.infrastructure.services.getCep.viaCep;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;

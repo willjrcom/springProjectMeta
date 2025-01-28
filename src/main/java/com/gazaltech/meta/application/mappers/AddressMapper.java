@@ -9,7 +9,7 @@ import com.gazaltech.meta.application.dtos.CreateAddressDTO;
 import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.infrastructure.models.AddressModel;
-import com.gazaltech.meta.infrastructure.services.getCep.ViaCepResponse;
+import com.gazaltech.meta.infrastructure.services.getCep.viaCep.ViaCepResponse;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {

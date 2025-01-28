@@ -6,7 +6,7 @@ import com.gazaltech.meta.application.dtos.UpdateAddressDTO;
 import com.gazaltech.meta.domain.Address;
 import com.gazaltech.meta.domain.Uf;
 import com.gazaltech.meta.infrastructure.models.AddressModel;
-import com.gazaltech.meta.infrastructure.services.getCep.ViaCepResponse;
+import com.gazaltech.meta.infrastructure.services.getCep.viaCep.ViaCepResponse;
 
 public class AddressFactory {
         public static CreateAddressDTO createAddressDTO() {

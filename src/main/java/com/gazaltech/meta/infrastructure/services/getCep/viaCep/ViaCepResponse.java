@@ -1,4 +1,4 @@
-package com.gazaltech.meta.infrastructure.services.getCep;
+package com.gazaltech.meta.infrastructure.services.getCep.viaCep;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
