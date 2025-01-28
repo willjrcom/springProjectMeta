@@ -21,7 +21,7 @@ Este é um projeto Java baseado no framework **Spring Boot** que permite o geren
 ## **Tecnologias Utilizadas**
 
 - **Java 17**
-- **Spring Boot** 2.7.x
+- **Spring Boot** 3.4.2
 - **Spring Data JPA**
 - **Spring Cloud OpenFeign**
 - **Postgres Database**
